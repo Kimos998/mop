@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Visualiseur de Données Cdiscount</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/lucide-static@latest/font/lucide.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --primary-light: #60a5fa;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-500: #6b7280;
+      --gray-700: #374151;
+      --gray-900: #111827;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius-sm: 8px;
+      --radius: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+      --transition: all 0.2s ease;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-900);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem;
+    }
+    .nav {
+      display: flex;
+      background: white;
+      border-radius: var(--radius);
+      border: 1px solid var(--gray-200);
+      padding: 0.5rem;
+      margin-bottom: 1.75rem;
+      box-shadow: var(--shadow-sm);
+      overflow-x: auto;
+      flex-wrap: nowrap;
+      gap: 0.25rem;
+    }
+    .nav button {
+      flex: 1 0 auto;
+      padding: 0.85rem 1.25rem;
+      border: none;
+      background: transparent;
+      font-weight: 500;
+      color: var(--gray-500);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: var(--transition);
+      font-size: 0.95rem;
+      border-radius: var(--radius-sm);
+    }
+    .nav button.active {
+      background: var(--primary);
+      color: white;
+      font-weight: 600;
+    }
+    .nav button:hover:not(.active) {
+      background: var(--gray-100);
+      color: var(--gray-700);
+    }
+    .sub-categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.75rem;
+    }
+    .sub-cat-btn {
+      padding: 0.7rem 1.4rem;
+      border: 1px solid var(--gray-300);
+      background: white;
+      border-radius: var(--radius);
+      font-weight: 500;
+      color: var(--gray-700);
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .sub-cat-btn.active,
+    .sub-cat-btn:hover {
+      border-color: var(--primary);
+      background: rgba(59,130,246,0.05);
+      color: var(--primary);
+      font-weight: 600;
+    }
+    #content-display {
+      display: block;
+      margin-top: 1rem;
+    }
+    .content-card {
+      background: white;
+      border-radius: var(--radius);
+      border: 1px solid var(--gray-200);
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    .content-card:hover {
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+    }
+    .card-header {
+      padding: 1rem 1.25rem;
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .card-header h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--gray-900);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: var(--radius-sm);
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition);
+      font-size: 0.9rem;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+    .card-body {
+      padding: 1.25rem;
+      white-space: pre-wrap;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: var(--gray-700);
+      background: white;
+      max-height: 420px;
+      overflow-y: auto;
+    }
+    @media (min-width: 992px) {
+      #content-display {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem 1.75rem;
+      }
+      .content-card {
+        flex: 1 1 32%;
+        min-width: 320px;
+        max-width: calc(33.333% - 1.17rem);
+      }
+      .content-card:nth-child(1):nth-last-child(2),
+      .content-card:nth-child(2):nth-last-child(1) {
+        flex: 1 1 48%;
+        max-width: calc(50% - 0.875rem);
+      }
+      .content-card:only-child {
+        flex: 1 1 100%;
+        max-width: 100%;
+      }
+    }
+    @media (max-width: 991px) {
+      #content-display { display: block; }
+      .content-card { margin-bottom: 1.5rem; }
+    }
+    .toast-container {
+      position: fixed;
+      top: 1.25rem;
+      right: 1.25rem;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .toast {
+      background: var(--gray-900);
+      color: white;
+      padding: 0.9rem 1.4rem;
+      border-radius: var(--radius);
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.5s forwards;
+    }
+    @keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes fadeOut { to { opacity: 0; transform: translateY(-12px); } }
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: var(--gray-50);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+    #loader.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .loader-content {
+      text-align: center;
+      max-width: 360px;
+      padding: 0 1.5rem;
+    }
+    .spinner {
+      width: 70px;
+      height: 70px;
+      border: 6px solid var(--gray-200);
+      border-top: 6px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s cubic-bezier(0.55, 0.055, 0.675, 0.19) infinite;
+      margin: 0 auto 1.5rem auto;
+    }
+    .loader-text {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--gray-900);
+      margin-bottom: 0.75rem;
+    }
+    .loader-subtext {
+      font-size: 0.95rem;
+      color: var(--gray-600);
+      line-height: 1.5;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @media (max-width: 768px) {
+      .nav { padding: 0.4rem; }
+      .nav button { padding: 0.75rem 1rem; font-size: 0.9rem; }
+      .container { padding: 1rem 0.75rem; }
+      .spinner { width: 60px; height: 60px; border-width: 5px; }
+      .loader-text { font-size: 1.15rem; }
+    }
+
+    /* زر جانبي بسيط + قائمة فاتحة */
+    .side-quick-btn {
+      position: fixed;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      background: rgba(100, 116, 139, 0.22);
+      color: #475569;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      font-weight: 500;
+      cursor: pointer;
+      z-index: 800;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      transition: all 0.22s ease;
+      opacity: 0.65;
+    }
+
+    .side-quick-btn:hover {
+      background: rgba(100, 116, 139, 0.38);
+      opacity: 1;
+      transform: translateY(-50%) scale(1.08);
+    }
+
+    .side-quick-panel {
+      position: fixed;
+      right: -240px;
+      top: 0;
+      width: 220px;
+      height: 100%;
+      background: #f8fafc;
+      border-left: 1px solid #e2e8f0;
+      transition: right 0.28s ease;
+      z-index: 780;
+      padding: 3rem 0.8rem 1.2rem;
+      color: #1e293b;
+    }
+
+    .side-quick-panel.open {
+      right: 0;
+    }
+
+    .panel-item {
+      display: block;
+      padding: 0.9rem 1.1rem;
+      color: #334155;
+      text-decoration: none;
+      font-size: 1.02rem;
+      border-radius: 8px;
+      margin: 0.4rem 0;
+      transition: all 0.18s ease;
+    }
+
+    .panel-item:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding-left: 1.4rem;
+    }
+
+    .side-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.25);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.28s ease;
+      z-index: 770;
+    }
+
+    .side-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    @media (max-width: 768px) {
+      .side-quick-btn { width: 44px; height: 44px; font-size: 24px; right: 12px; }
+      .side-quick-panel { width: 200px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- زر جانبي بسيط + قائمة بدون عنوان -->
+<div class="side-quick-btn" id="sideQuickBtn">⋮</div>
+
+<div class="side-quick-panel" id="sideQuickPanel">
+  <a href="lvdo.html" class="panel-item">RBT / Liv apres</a>
+  <a href="do.html" class="panel-item">Dossier</a>
+  <a href="rec.html" class="panel-item">Rec</a>
+  <a href="sav.html" class="panel-item">SAV</a>
+  <a href="esc.html" class="panel-item">Esc</a>
+  <a href="nb.html" class="panel-item">remarques</a>
+</div>
+
+<div class="side-overlay" id="sideOverlay"></div>
+
+<div class="container">
+  <div class="toast-container" id="toasts"></div>
+  <nav class="nav" id="main-tabs"></nav>
+  <div class="sub-categories" id="sub-categories"></div>
+  <div id="content-display"></div>
+</div>
+
+<!-- Écran de chargement -->
+<div id="loader">
+  <div class="loader-content">
+    <div class="spinner"></div>
+    <div class="loader-text">Chargement des données</div>
+    <div class="loader-subtext">Merci de patienter...</div>
+  </div>
+</div>
+
+<script>
+// Toast notification
+function toast(msg, icon = 'icon-check') {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = `<i class="${icon}"></i> ${msg}`;
+  document.getElementById('toasts').appendChild(t);
+  setTimeout(() => t.remove(), 2500);
+}
+
+// Variables globales
+const DATA_URL = 'https://script.googleusercontent.com/macros/echo?user_content_key=AY5xjrTAlA_AIk94kjx9UCVyJM-7i_d8QqiYUD6y9OAJ8ZdG-NuCl_wOvYLhiRxe1xA6-KdehvhJ0ASoF9ELM9YNJiKdsAToaDGSg5XkibRiOFmpv6QuB3uegaGMeQ97o3QZ4Obrw_XUliidMu_oSxBETvBYgWJVWHM-f-ezpSmxU3C2f_uORD-R6hUDhiTCx6yCXm3IKIe6oG9DsLh5d3AYdGS_JQkpK1iElQHJRNcTvspvSToHR2fYyqKsJyrd55P6KE9E_iaHPPQqlRe5ijUTRM2bslTGmA&lib=My-GJsg477MHoHZ8h_bfYZO-TjKIvX8ZV';
+
+let allData = [];
+let categorizedData = {};
+
+// Structure des catégories mise à jour (basée sur tes nouvelles données)
+const categories = {
+  'Problèmes d\'Expédition': [
+    "Non expédiée Pas de tracking",
+    "Expédition non confirmée",
+    "expe conferme avec lien"
+  ],
+  'Suivi de Livraison': [
+    "En cours de livraison",
+    "En cours de livraison (patienter)",
+    "colis en retour",
+    "si client patienter ",
+    "Rexpédition encours",
+    "Rexpédition pas de lien"
+  ],
+  'Problèmes de Réception': [
+    "Pas de solution",
+    "Livré sans preuve",
+    "colis absent du point relais",
+    "livre apres ",
+    "absence au point relai",
+    "liv point relai"
+  ],
+  'Livraison Confirmée': [
+    "Livré avec preuve",
+    "¨Produit DEMT"
+  ],
+  'Gestion des Litiges': [
+    "RBT ou Rexp pas reponse",
+    "choix client réexpédition",
+    "client choisir rexpe ",
+    "client choisir remborsement ",
+    "RBT relance vendeur",
+    "RBT apres",
+    "commande rembourse ",
+    "VDR ne repondre pas RBT",
+    "pas de solution apres 7j"
+  ]
+};
+
+window.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const response = await fetch(DATA_URL);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const text = await response.text();
+    const cleaned = text.replace(/,"relance aucun solutio":""/g, '');
+    allData = JSON.parse(cleaned);
+    categorizeData();
+    renderMainTabs();
+    if (document.querySelector('.nav button')) {
+      document.querySelector('.nav button').click();
+    }
+    const loader = document.getElementById('loader');
+    loader.classList.add('hidden');
+    setTimeout(() => { loader.style.display = 'none'; }, 520);
+  } catch (err) {
+    const loader = document.getElementById('loader');
+    loader.innerHTML = `
+      <div class="loader-content">
+        <div style="font-size: 3.5rem; color: var(--danger); margin-bottom: 1.25rem;">!</div>
+        <div class="loader-text" style="color: var(--danger);">Échec du chargement</div>
+        <div class="loader-subtext">Impossible de récupérer les données.<br>Veuillez rafraîchir la page ou vérifier votre connexion.</div>
+      </div>
+    `;
+    console.error('Erreur chargement données:', err);
+  }
+
+  // Contrôle du menu latéral
+  const btn = document.getElementById('sideQuickBtn');
+  const panel = document.getElementById('sideQuickPanel');
+  const overlay = document.getElementById('sideOverlay');
+
+  function closePanel() {
+    panel.classList.remove('open');
+    overlay.classList.remove('open');
+  }
+
+  btn.addEventListener('click', () => {
+    panel.classList.toggle('open');
+    overlay.classList.toggle('open');
+  });
+
+  overlay.addEventListener('click', closePanel);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closePanel();
+  });
+});
+
+function categorizeData() {
+  Object.keys(categories).forEach(cat => categorizedData[cat] = []);
+  const assigned = new Set();
+
+  for (const catName in categories) {
+    categories[catName].forEach(title => {
+      allData.forEach(item => {
+        if (item[""]?.trim() === title.trim() && !assigned.has(item)) {
+          categorizedData[catName].push(item);
+          assigned.add(item);
+        }
+      });
+    });
+  }
+
+  // Ajout des éléments non classés dans une catégorie "Autres"
+  allData.forEach(item => {
+    if (!assigned.has(item)) {
+      if (!categorizedData['Autres']) categorizedData['Autres'] = [];
+      categorizedData['Autres'].push(item);
+      assigned.add(item);
+    }
+  });
+}
+
+function renderMainTabs() {
+  const container = document.getElementById('main-tabs');
+  container.innerHTML = '';
+  Object.keys(categorizedData)
+    .filter(cat => categorizedData[cat].length > 0)
+    .sort()
+    .forEach(catName => {
+      const btn = document.createElement('button');
+      btn.textContent = catName;
+      btn.onclick = () => {
+        document.querySelectorAll('#main-tabs button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderSubCategories(catName);
+      };
+      container.appendChild(btn);
+    });
+}
+
+function renderSubCategories(catName) {
+  const container = document.getElementById('sub-categories');
+  const display = document.getElementById('content-display');
+  container.innerHTML = '';
+  display.innerHTML = '';
+  const items = categorizedData[catName] || [];
+  items.sort((a,b) => a[""]?.localeCompare(b[""] || ''));
+  items.forEach(item => {
+    const btn = document.createElement('button');
+    btn.className = 'sub-cat-btn';
+    btn.textContent = item[""] || '(sans titre)';
+    btn.onclick = () => {
+      document.querySelectorAll('.sub-cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderContent(item);
+    };
+    container.appendChild(btn);
+  });
+  if (items.length > 0) {
+    container.querySelector('.sub-cat-btn')?.click();
+  } else {
+    display.innerHTML = '<div style="text-align:center; padding:6rem 1rem; color:var(--gray-500);">Aucune donnée dans cette catégorie</div>';
+  }
+}
+
+function renderContent(item) {
+  const display = document.getElementById('content-display');
+  display.innerHTML = '';
+  const sections = [
+    { title: 'Message pour le client', text: item.client },
+    { title: 'Message pour le vendeur', text: item.vendeur },
+    { title: 'Action requise', text: item.action }
+  ];
+  sections.forEach(({title, text}) => {
+    if (!text || !text.trim()) return;
+    const card = document.createElement('div');
+    card.className = 'content-card';
+    const header = document.createElement('div');
+    header.className = 'card-header';
+    const h3 = document.createElement('h3');
+    h3.innerHTML = `<i class="icon-message-square"></i> ${title}`;
+    header.appendChild(h3);
+    const copyBtn = document.createElement('button');
+    copyBtn.className = 'btn btn-primary';
+    copyBtn.innerHTML = '<i class="icon-copy"></i> Copier';
+    copyBtn.onclick = () => {
+      navigator.clipboard.writeText(text.trim()).then(() => {
+        const orig = copyBtn.innerHTML;
+        copyBtn.innerHTML = '<i class="icon-check"></i> Copié !';
+        copyBtn.classList.add('btn-success');
+        toast('Texte copié dans le presse-papiers', 'icon-check');
+        setTimeout(() => {
+          copyBtn.innerHTML = orig;
+          copyBtn.classList.remove('btn-success');
+        }, 2000);
+      });
+    };
+    header.appendChild(copyBtn);
+    const body = document.createElement('div');
+    body.className = 'card-body';
+    body.textContent = text.trim();
+    card.appendChild(header);
+    card.appendChild(body);
+    display.appendChild(card);
+  });
+}
+</script>
+</body>
+</html>
