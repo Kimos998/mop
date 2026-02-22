@@ -18,7 +18,7 @@
         "Message client": "Bonjour,\n\nPour pouvoir traiter votre demande, le vendeur a besoin d’informations complémentaires :\n\n...\n \nA réception des informations, le vendeur vous proposera une solution de prise en charge.\n\nDe notre coté, nous veillerons à ce que cette solution soit mise en œuvre correctement et dans un délai raisonnable. Nous vous remercions de votre bonne collaboration,\n\nL'équipe Cdiscount",
         "Message vendeur": "Bonjour,\n\nNous accusons réception de votre réponse ; Vous avez indiqué avoir besoin d'éléments complémentaires afin d'établir un diagnostic,\n\nNous prenons contact avec le client afin d'appuyer votre demande et qu'il vous apporte les informations demandées dans les meilleurs délais.\n\nEn attendant, nous vous invitons à lui fournir une solution conforme  de prise en charge.\n\nMerci pour votre prise en charge, \n\nL’équipe Cdiscount",
         "Action": "2 - MEA 2 jours",
-        "Note": "Le vendeur demande des informations, Attendre la réponse du client.\n\nPour information, le numéro IMEI du téléphone du client est :"
+        "Note": "Le vendeur demande des informations, Attendre la réponse du client.\nPour information, le numéro IMEI du téléphone du client est :"
     },
     {
         "Raison": "VDR acc prise",
