@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Modèles de Réponse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/lucide-static@latest/font/lucide.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --primary-light: #60a5fa;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-500: #6b7280;
+      --gray-700: #374151;
+      --gray-900: #111827;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius-sm: 8px;
+      --radius: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+      --transition: all 0.2s ease;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-900);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem;
+    }
+    .filters-wrapper {
+      background: white;
+      border-radius: var(--radius);
+      border: 1px solid var(--gray-200);
+      padding: 0.75rem;
+      margin-bottom: 1.75rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: center;
+    }
+    .filter-btn {
+      padding: 0.65rem 1.3rem;
+      border: 1px solid var(--gray-300);
+      background: white;
+      border-radius: var(--radius);
+      font-weight: 500;
+      color: var(--gray-700);
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 0.92rem;
+      white-space: nowrap;
+    }
+    .filter-btn:hover {
+      border-color: var(--primary);
+      background: rgba(59,130,246,0.04);
+      color: var(--primary);
+    }
+    .filter-btn.active {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: white;
+      font-weight: 600;
+    }
+    #display-grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+    .box {
+      background: white;
+      border-radius: var(--radius);
+      border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    .box:hover {
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.06);
+    }
+    .box-header {
+      padding: 0.9rem 1.25rem;
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--gray-900);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .box-header span {
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      font-size: 0.9rem;
+    }
+    .btn {
+      padding: 0.55rem 1.1rem;
+      border-radius: var(--radius-sm);
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: var(--transition);
+      font-size: 0.9rem;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+    .box-body {
+      padding: 1.25rem;
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: var(--gray-700);
+      white-space: pre-wrap;
+      min-height: 180px;
+      max-height: 520px;
+      overflow-y: auto;
+      background: white;
+    }
+    .loader, .error-msg {
+      text-align: center;
+      padding: 6rem 1rem;
+      color: var(--gray-500);
+      font-size: 1.1rem;
+      width: 100%;
+    }
+    .toast-container {
+      position: fixed;
+      top: 1.25rem;
+      right: 1.25rem;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .toast {
+      background: var(--gray-900);
+      color: white;
+      padding: 0.9rem 1.4rem;
+      border-radius: var(--radius);
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.5s forwards;
+    }
+    @keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes fadeOut { to { opacity: 0; transform: translateY(-12px); } }
+    .hidden { display: none !important; }
+
+    /* ──────────────────────────────────────────────── */
+    /*          زر جانبي بسيط + قائمة فاتحة           */
+    /* ──────────────────────────────────────────────── */
+    .side-quick-btn {
+      position: fixed;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      background: rgba(100, 116, 139, 0.22);
+      color: #475569;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      font-weight: 500;
+      cursor: pointer;
+      z-index: 800;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      transition: all 0.22s ease;
+      opacity: 0.65;
+    }
+
+    .side-quick-btn:hover {
+      background: rgba(100, 116, 139, 0.38);
+      opacity: 1;
+      transform: translateY(-50%) scale(1.08);
+    }
+
+    .side-quick-panel {
+      position: fixed;
+      right: -240px;
+      top: 0;
+      width: 220px;
+      height: 100%;
+      background: #f8fafc;
+      border-left: 1px solid #e2e8f0;
+      transition: right 0.28s ease;
+      z-index: 780;
+      padding: 3rem 0.8rem 1.2rem;
+      color: #1e293b;
+    }
+
+    .side-quick-panel.open {
+      right: 0;
+    }
+
+    .panel-item {
+      display: block;
+      padding: 0.9rem 1.1rem;
+      color: #334155;
+      text-decoration: none;
+      font-size: 1.02rem;
+      border-radius: 8px;
+      margin: 0.4rem 0;
+      transition: all 0.18s ease;
+    }
+
+    .panel-item:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding-left: 1.4rem;
+    }
+
+    .side-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.25);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.28s ease;
+      z-index: 770;
+    }
+
+    .side-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    @media (min-width: 1100px) {
+      #display-grid { grid-template-columns: repeat(4, 1fr); }
+      .box { min-height: 420px; }
+      .box-body { min-height: 260px; }
+    }
+    @media (min-width: 768px) and (max-width: 1099px) {
+      #display-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 767px) {
+      #display-grid { grid-template-columns: 1fr; }
+      .filters-wrapper { padding: 0.6rem; gap: 0.5rem; }
+      .filter-btn { padding: 0.55rem 1rem; font-size: 0.88rem; }
+      .container { padding: 1rem 0.75rem; }
+      .side-quick-btn { width: 44px; height: 44px; font-size: 24px; right: 12px; }
+      .side-quick-panel { width: 200px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="toast-container" id="toasts"></div>
+
+  <div id="filters" class="filters-wrapper">
+    <div class="loader">Chargement des modèles...</div>
+  </div>
+
+  <div id="display-grid" style="display:none;">
+    <div class="box">
+      <div class="box-header">
+        <span>Message Client</span>
+        <button class="btn btn-primary" onclick="copyContent('client-text')">
+          <i class="icon-copy"></i> Copier
+        </button>
+      </div>
+      <div id="client-text" class="box-body"></div>
+    </div>
+    <div class="box">
+      <div class="box-header">
+        <span>Message Vendeur</span>
+        <button class="btn btn-primary" onclick="copyContent('vendeur-text')">
+          <i class="icon-copy"></i> Copier
+        </button>
+      </div>
+      <div id="vendeur-text" class="box-body"></div>
+    </div>
+    <div class="box">
+      <div class="box-header">
+        <span>Action requise</span>
+        <button class="btn btn-primary" onclick="copyContent('action-text')">
+          <i class="icon-copy"></i> Copier
+        </button>
+      </div>
+      <div id="action-text" class="box-body"></div>
+    </div>
+    <div class="box">
+      <div class="box-header">
+        <span>Notes internes</span>
+        <button class="btn btn-primary" onclick="copyContent('note-text')">
+          <i class="icon-copy"></i> Copier
+        </button>
+      </div>
+      <div id="note-text" class="box-body"></div>
+    </div>
+  </div>
+</div>
+
+<!-- زر جانبي بسيط + قائمة بدون عنوان -->
+<div class="side-quick-btn" id="sideQuickBtn">⋮</div>
+
+<div class="side-quick-panel" id="sideQuickPanel">
+  <a href="lvdo.html"  class="panel-item">RBT / Liv apres</a>
+  <a href="do.html" class="panel-item">Dossier</a>
+  <a href="rec.html" class="panel-item">Rec</a>
+  <a href="sav.html"  class="panel-item">SAV</a>
+  <a href="esc.html"  class="panel-item">Esc</a>
+  <a href="nb.html" class="panel-item">remarques</a>
+</div>
+
+<div class="side-overlay" id="sideOverlay"></div>
+
+<script>
+// Toast
+function toast(msg, icon = 'icon-check') {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = `<i class="${icon}"></i> ${msg}`;
+  document.getElementById('toasts').appendChild(t);
+  setTimeout(() => t.remove(), 2200);
+}
+
+const jsonUrl = 'https://kimos998.github.io/myo/data.json';
+let database = [];
+
+async function init() {
+  try {
+    const response = await fetch(jsonUrl);
+    if (!response.ok) throw new Error('Erreur réseau');
+    database = await response.json();
+    renderFilters(database);
+  } catch (err) {
+    document.getElementById('filters').innerHTML =
+      `<div class="error-msg" style="color:var(--danger);">Erreur de chargement des données</div>`;
+    console.error(err);
+  }
+}
+
+function renderFilters(data) {
+  const container = document.getElementById('filters');
+  container.innerHTML = '';
+  data.forEach((item, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.textContent = item.Raison?.trim() || '(sans raison)';
+    btn.onclick = () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      showItem(item);
+    };
+    container.appendChild(btn);
+  });
+
+  if (data.length > 0) {
+    container.querySelector('.filter-btn')?.click();
+    document.getElementById('display-grid').style.display = 'grid';
+  }
+}
+
+function showItem(item) {
+  document.getElementById('client-text').textContent = item["Message client"]?.trim() || "—";
+  document.getElementById('vendeur-text').textContent = item["Message vendeur"]?.trim() || "—";
+  document.getElementById('action-text').textContent = item.Action?.trim() || "—";
+  document.getElementById('note-text').textContent = item.Note?.trim() || "—";
+}
+
+window.copyContent = function(id) {
+  const el = document.getElementById(id);
+  const text = el.textContent.trim();
+  if (text === '—' || !text) return;
+  const btn = event.target.closest('button');
+  navigator.clipboard.writeText(text).then(() => {
+    const origHTML = btn.innerHTML;
+    btn.innerHTML = '<i class="icon-check"></i> Copié !';
+    btn.classList.add('btn-success');
+    toast('Copié dans le presse-papiers');
+    setTimeout(() => {
+      btn.innerHTML = origHTML;
+      btn.classList.remove('btn-success');
+    }, 1600);
+  }).catch(() => toast('Échec de la copie', 'icon-alert-triangle'));
+};
+
+// ────────────────────────────────────────────────
+// زر القائمة الجانبية
+// ────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('sideQuickBtn');
+  const panel = document.getElementById('sideQuickPanel');
+  const overlay = document.getElementById('sideOverlay');
+
+  function closePanel() {
+    panel.classList.remove('open');
+    overlay.classList.remove('open');
+  }
+
+  btn.addEventListener('click', () => {
+    panel.classList.toggle('open');
+    overlay.classList.toggle('open');
+  });
+
+  overlay.addEventListener('click', closePanel);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closePanel();
+  });
+
+  // تشغيل التحميل الأساسي
+  init();
+});
+</script>
+</body>
+</html>

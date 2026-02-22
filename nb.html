@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Remarques SAV - Compact</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f8f9fa;
+      color: #222;
+      margin: 0;
+      padding: 12px 15px;
+      line-height: 1.4;
+      font-size: 14px;
+    }
+    h1 {
+      font-size: 1.4rem;
+      color: #1a3c5e;
+      text-align: center;
+      margin: 12px 0 18px;
+    }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .item {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .status {
+      font-weight: 600;
+      color: #0066cc;
+      min-width: 130px;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .remark {
+      flex: 1;
+      color: #333;
+    }
+    .copy-btn {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .copy-btn:hover {
+      background: #0062cc;
+    }
+    .copy-btn.copied {
+      background: #28a745;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 25px;
+      color: #888;
+      font-size: 0.8rem;
+    }
+
+    /* زر جانبي بسيط + قائمة فاتحة */
+    .side-quick-btn {
+      position: fixed;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      background: rgba(100, 116, 139, 0.22);
+      color: #475569;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      font-weight: 500;
+      cursor: pointer;
+      z-index: 800;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      transition: all 0.22s ease;
+      opacity: 0.65;
+    }
+
+    .side-quick-btn:hover {
+      background: rgba(100, 116, 139, 0.38);
+      opacity: 1;
+      transform: translateY(-50%) scale(1.08);
+    }
+
+    .side-quick-panel {
+      position: fixed;
+      right: -240px;
+      top: 0;
+      width: 220px;
+      height: 100%;
+      background: #f8fafc;
+      border-left: 1px solid #e2e8f0;
+      transition: right 0.28s ease;
+      z-index: 780;
+      padding: 3rem 0.8rem 1.2rem;
+      color: #1e293b;
+    }
+
+    .side-quick-panel.open {
+      right: 0;
+    }
+
+    .panel-item {
+      display: block;
+      padding: 0.9rem 1.1rem;
+      color: #334155;
+      text-decoration: none;
+      font-size: 1.02rem;
+      border-radius: 8px;
+      margin: 0.4rem 0;
+      transition: all 0.18s ease;
+    }
+
+    .panel-item:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding-left: 1.4rem;
+    }
+
+    .side-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.25);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.28s ease;
+      z-index: 770;
+    }
+
+    .side-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    @media (max-width: 600px) {
+      .item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
+      .status {
+        min-width: auto;
+        text-align: left;
+      }
+      .copy-btn {
+        width: 100%;
+        padding: 8px;
+      }
+      .side-quick-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 24px;
+        right: 12px;
+      }
+      .side-quick-panel {
+        width: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- زر جانبي بسيط + قائمة بدون عنوان -->
+  <div class="side-quick-btn" id="sideQuickBtn">⋮</div>
+
+  <div class="side-quick-panel" id="sideQuickPanel">
+    <a href="lvdo.html"  class="panel-item">RBT / Liv apres</a>
+  <a href="do.html" class="panel-item">Dossier</a>
+  <a href="rec.html" class="panel-item">Rec</a>
+  <a href="sav.html"  class="panel-item">SAV</a>
+  <a href="esc.html"  class="panel-item">Esc</a>
+  <a href="nb.html" class="panel-item">remarques</a>
+  </div>
+
+  <div class="side-overlay" id="sideOverlay"></div>
+
+  <div class="container">
+  
+
+    <div class="item">
+      <div class="status">Code activation</div>
+      <div class="remark">Le vendeur a bien envoyé le code d’activation depuis le SDE. Le client confirme qu’il a bien reçu le colis.</div>
+      <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+    </div>
+
+    <div class="item">
+      <div class="status">Colis en retour</div>
+      <div class="remark">Colis en retour. J’ai informé le client que j’ai relancé le vendeur concernant le remboursement. J’ai demandé au client de confirmer s’il souhaite une réexpédition ou un remboursement.</div>
+      <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+    </div>
+
+    <div class="item">
+      <div class="status">En cours livraison</div>
+      <div class="remark">Colis en cours de livraison. J’ai informé le client que j’ai relancé le vendeur pour proposer une solution.</div>
+      <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+    </div>
+
+    <div class="item">
+      <div class="status">Non expédiée</div>
+      <div class="remark">Commande non expédiée. J’ai informé le client que j’ai relancé le vendeur afin qu’il envoie un lien de suivi valide ou propose une solution adaptée.</div>
+      <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+    </div>
+
+    <div class="item">
+      <div class="status">Colis livré</div>
+      <div class="remark">Colis livré. J’ai informé le client que j’ai relancé le vendeur afin qu’il fournisse une preuve de livraison ou propose une solution adaptée.</div>
+      <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+    </div>
+
+    <div class="item">
+      <div class="status">Livré + vérif</div>
+      <div class="remark">Colis livré. J’ai informé le client que j’ai transféré son dossier à notre équipe pour vérifier la preuve de livraison et je l’ai invité à patienter le temps du traitement.</div>
+      <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+    </div>
+
+    <div class="item">
+      <div class="status">Livré + enquête</div>
+      <div class="remark">Colis livré. Le client a été informé que son dossier a été transféré au service concerné afin que des vérifications soient effectuées auprès du transporteur. Il recevra le suivi de traitement sous 48 heures.</div>
+      <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+    </div>
+
+    <div class="item">
+      <div class="status">Commande perdue</div>
+      <div class="remark">Commande perdue. J’ai informé le client que j’ai relancé le vendeur afin qu’il envoie un lien de suivi valide pour suivre la réexpédition.</div>
+      <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+    </div>
+
+    <div class="item">
+      <div class="status">Point relais >15j</div>
+      <div class="remark">J’ai informé le client que le colis est disponible en point relais depuis plus de 15 jours. J’ai relancé le vendeur pour vérifier l’état de la livraison du colis.</div>
+      <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+    </div>
+
+    <div class="item">
+      <div class="status">Demande remb.</div>
+      <div class="remark">La cliente sollicite un remboursement, en raison de l'absence de réponse du vendeur.</div>
+      <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+    </div>
+
+    <div class="item">
+      <div class="status">Réexp. confirmée</div>
+      <div class="remark">Réexpédition confirmée. J’ai informé le client que j’ai relancé le vendeur afin qu’il fournisse un lien de suivi valide pour suivre la livraison du nouvel envoi.</div>
+      <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+    </div>
+
+    <div class="item">
+      <div class="status">Réexp. + lien OK</div>
+      <div class="remark">Réexpédition confirmée. J’ai informé le client que le vendeur a bien fourni un lien de suivi valide pour suivre la livraison du nouvel envoi. Aucune anomalie constatée jusqu’à maintenant, je l’ai invité à patienter jusqu’à la livraison.</div>
+      <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+    </div>
+
+    <div class="item">
+      <div class="status">Absent point relais</div>
+      <div class="remark">Colis absent au point relais. J’ai informé le client que j’ai relancé le vendeur afin qu’il propose une solution</div>
+      <button class="copy-btn" onclick="copyToClipboard(this)">Copier</button>
+    </div>
+
+  </div>
+
+ 
+
+  <script>
+    function copyToClipboard(btn) {
+      const remark = btn.parentElement.querySelector('.remark').textContent.trim();
+      navigator.clipboard.writeText(remark).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = "Copié ✓";
+        btn.classList.add("copied");
+        setTimeout(() => {
+          btn.textContent = orig;
+          btn.classList.remove("copied");
+        }, 1400);
+      }).catch(() => {
+        btn.textContent = "Erreur";
+        setTimeout(() => btn.textContent = "Copier", 1200);
+      });
+    }
+
+    // ────────────────────────────────────────────────
+    // زر القائمة الجانبية (التنقل السريع)
+    // ────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('sideQuickBtn');
+      const panel = document.getElementById('sideQuickPanel');
+      const overlay = document.getElementById('sideOverlay');
+
+      function closePanel() {
+        panel.classList.remove('open');
+        overlay.classList.remove('open');
+      }
+
+      btn.addEventListener('click', () => {
+        panel.classList.toggle('open');
+        overlay.classList.toggle('open');
+      });
+
+      overlay.addEventListener('click', closePanel);
+
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closePanel();
+      });
+    });
+  </script>
+</body>
+</html>

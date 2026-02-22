@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestionnaire de Fichiers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/lucide-static@latest/font/lucide.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-dark:#2563eb;
+      --primary-light: #60a5fa;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-500: #6b7280;
+      --gray-700: #374151;
+      --gray-900: #111827;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius-sm: 8px;
+      --radius: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+      --transition: all 0.2s ease;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-900);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem;
+    }
+    .nav {
+      display: flex;
+      background: white;
+      border-radius: var(--radius);
+      border: 1px solid var(--gray-200);
+      padding: 0.5rem;
+      margin-bottom: 1.75rem;
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .nav button {
+      flex: 1;
+      padding: 0.85rem 1rem;
+      border: none;
+      background: transparent;
+      font-weight: 500;
+      color: var(--gray-500);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: var(--transition);
+      font-size: 0.95rem;
+      border-radius: var(--radius);
+    }
+    .nav button.active {
+      background: var(--primary);
+      color: white;
+      font-weight: 600;
+    }
+    .nav button:hover:not(.active) {
+      background: var(--gray-100);
+      color: var(--gray-700);
+    }
+    .card {
+      background: white;
+      border-radius: var(--radius);
+      border: 1px solid var(--gray-200);
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+    .card:hover {
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+    }
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--gray-900);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .btn {
+      padding: 0.75rem 1.4rem;
+      border-radius: var(--radius);
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: var(--transition);
+      font-size: 0.95rem;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+    .btn-outline {
+      background: white;
+      border: 1px solid var(--gray-300);
+      color: var(--gray-700);
+    }
+    .btn-outline:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: rgba(59,130,246,0.04);
+    }
+    .btn-success { background: #ecfdf5; color: var(--success); border: 1px solid #a7f3d0; }
+    .btn-warning { background: #fffbeb; color: var(--warning); border: 1px solid #fde68a; }
+    .btn-danger { background: #fef2f2; color: var(--danger); border: 1px solid #fecaca; }
+    .btn-full { width: 100%; }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    textarea, input {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius);
+      font-size: 0.95rem;
+      transition: var(--transition);
+      background: white;
+    }
+    textarea:focus, input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+    }
+    .categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .category-btn {
+      padding: 0.7rem 1.4rem;
+      border: 1px solid var(--gray-300);
+      background: white;
+      border-radius: var(--radius);
+      font-weight: 500;
+      color: var(--gray-700);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .category-btn.active {
+      border-color: var(--primary);
+      background: rgba(59,130,246,0.05);
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .file-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.9rem 1.1rem;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      margin-bottom: 0.75rem;
+      background: white;
+      transition: var(--transition);
+    }
+    .file-item:hover {
+      border-color: var(--primary-light);
+      box-shadow: 0 2px 8px rgba(59,130,246,0.08);
+    }
+    .toast-container {
+      position: fixed;
+      top: 1.25rem;
+      right: 1.25rem;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .toast {
+      background: var(--gray-900);
+      color: white;
+      padding: 0.9rem 1.4rem;
+      border-radius: var(--radius);
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.5s forwards;
+    }
+    @keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes fadeOut { to { opacity: 0; transform: translateY(-12px); } }
+    .hidden { display: none !important; }
+
+    /* زر وقائمة جانبية بسيطة */
+    .side-quick-btn {
+      position: fixed;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      background: rgba(100, 116, 139, 0.22);
+      color: #475569;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      font-weight: 500;
+      cursor: pointer;
+      z-index: 800;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      transition: all 0.22s ease;
+      opacity: 0.65;
+    }
+
+    .side-quick-btn:hover {
+      background: rgba(100, 116, 139, 0.38);
+      opacity: 1;
+      transform: translateY(-50%) scale(1.08);
+    }
+
+    .side-quick-panel {
+      position: fixed;
+      right: -240px;
+      top: 0;
+      width: 220px;
+      height: 100%;
+      background: #f8fafc;
+      border-left: 1px solid #e2e8f0;
+      transition: right 0.28s ease;
+      z-index: 780;
+      padding: 3rem 0.8rem 1.2rem;
+      color: #1e293b;
+    }
+
+    .side-quick-panel.open {
+      right: 0;
+    }
+
+    .panel-item {
+      display: block;
+      padding: 0.9rem 1.1rem;
+      color: #334155;
+      text-decoration: none;
+      font-size: 1.02rem;
+      border-radius: 8px;
+      margin: 0.4rem 0;
+      transition: all 0.18s ease;
+    }
+
+    .panel-item:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding-left: 1.4rem;
+    }
+
+    .side-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.25);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.28s ease;
+      z-index: 770;
+    }
+
+    .side-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    @media (max-width: 480px) {
+      .container { padding: 1rem 0.75rem; }
+      .nav button { font-size: 0.9rem; padding: 0.7rem; }
+      .btn { padding: 0.6rem 1rem; font-size: 0.9rem; }
+      .side-quick-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 24px;
+        right: 12px;
+      }
+      .side-quick-panel {
+        width: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="toast-container" id="toasts"></div>
+
+  <nav class="nav">
+    <button class="active" data-page="process"><i class="icon-play"></i> Traiter</button>
+    <button data-page="skipped"><i class="icon-pause-circle"></i> Écartés <span id="skipped-count"></span></button>
+    <button data-page="history"><i class="icon-archive"></i> Historique</button>
+  </nav>
+
+  <div id="page-process">
+    <div id="setup">
+      <div class="card">
+        <div class="card-title"><i class="icon-tag"></i> Choisir une catégorie</div>
+        <div class="categories">
+          <button class="category-btn" data-cat="Esc">Esc</button>
+          <button class="category-btn" data-cat="Rec">Rec</button>
+          <button class="category-btn" data-cat="NA">NA</button>
+          <button class="category-btn" data-cat="SAV">SAV</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="icon-list"></i> Coller la liste de fichiers</div>
+        <textarea id="input-list" rows="7" placeholder="Un numéro par ligne..."></textarea>
+      </div>
+      <button id="start-btn" class="btn btn-primary btn-full" disabled>
+        <i class="icon-arrow-right"></i> Démarrer le traitement
+      </button>
+    </div>
+
+    <div id="processing" class="hidden">
+      <div class="card">
+        <div style="text-align:center; padding:2rem 1rem;">
+          <div id="current-category" style="display:inline-block; padding:0.5rem 1.2rem; background:rgba(59,130,246,0.1); color:var(--primary); border-radius:var(--radius); font-weight:600; margin-bottom:1.25rem;"></div>
+          <div id="current-number" style="font-size:2.5rem; font-weight:700; font-family:monospace; letter-spacing:1px; word-break:break-all; margin:1.25rem 0; color:var(--gray-900);"></div>
+          <div style="height:8px; background:var(--gray-200); border-radius:4px; overflow:hidden; margin:1.75rem 0;">
+            <div id="progress-bar" style="height:100%; background:var(--primary); width:0%; transition:width 0.5s ease;"></div>
+          </div>
+          <div id="progress-text" style="color:var(--text-light); font-size:1rem; margin-bottom:1.75rem;"></div>
+          <input id="future-date" placeholder="Date future (JJ/MM)" maxlength="5" style="max-width:180px; text-align:center; margin-bottom:1.75rem; font-size:1rem;">
+          <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+            <button class="btn btn-outline" onclick="copyCurrent()"><i class="icon-copy"></i> Copier</button>
+            <button class="btn btn-success" onclick="validateCurrent()"><i class="icon-check"></i> Valider</button>
+            <button class="btn btn-warning" id="defer-btn" onclick="deferCurrent()"><i class="icon-clock"></i> Reporter</button>
+            <button class="btn btn-danger hidden" id="discard-btn" onclick="discardCurrent()"><i class="icon-x-circle"></i> Écarter</button>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-outline btn-full" onclick="cancelSession()" style="margin-top:1rem;">
+        <i class="icon-x"></i> Annuler la session
+      </button>
+    </div>
+
+    <div id="completed" class="hidden card" style="text-align:center; padding:4rem 1.5rem;">
+      <div style="font-size:4.5rem; color:var(--success); margin-bottom:1.5rem; line-height:1;">✓</div>
+      <h2 style="font-size:1.6rem; margin-bottom:1rem; color:var(--gray-900);">Traitement terminé avec succès</h2>
+      <p id="completed-summary" style="color:var(--text-light); font-size:1.1rem; margin-bottom:2rem;"></p>
+      <button class="btn btn-primary btn-full" onclick="resetApp()">
+        <i class="icon-plus"></i> Nouvelle session
+      </button>
+    </div>
+  </div>
+
+  <div id="page-skipped" class="hidden">
+    <div class="card">
+      <div class="card-title"><i class="icon-pause-circle"></i> Fichiers écartés</div>
+      <div id="skipped-list"></div>
+      <div id="no-skipped" class="hidden" style="text-align:center; color:var(--text-light); padding:4rem 1rem; font-size:1.1rem;">
+        Aucun fichier n'a été écarté pour le moment
+      </div>
+    </div>
+  </div>
+
+  <div id="page-history" class="hidden">
+    <div class="card">
+      <div class="card-title"><i class="icon-archive"></i> Historique</div>
+      <div id="due-alerts" class="hidden alert-box">
+        <div class="alert-title">
+          <i class="icon-bell"></i> Fichiers à vérifier aujourd'hui ou en retard
+        </div>
+        <div id="due-list"></div>
+      </div>
+      <input type="text" id="search-history" placeholder="Rechercher un numéro..." style="margin:1.25rem 0; width:100%; font-size:1rem;">
+      <div id="history-list"></div>
+      <div id="no-history" class="hidden" style="text-align:center; color:var(--text-light); padding:4rem 1rem; font-size:1.1rem;">
+        Aucun enregistrement pour le moment
+      </div>
+      <div style="margin-top:2rem; display:flex; flex-direction:column; gap:1rem;">
+        <button class="btn btn-primary btn-full" onclick="exportData()">
+          <i class="icon-download"></i> Télécharger data.json
+        </button>
+        <label class="btn btn-outline btn-full" style="cursor:pointer; text-align:center;">
+          <i class="icon-upload"></i> Importer data.json
+          <input type="file" accept=".json" hidden onchange="importData(this.files)">
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- زر وقائمة جانبية بسيطة بدون عنوان -->
+<div class="side-quick-btn" id="sideQuickBtn">⋮</div>
+
+<div class="side-quick-panel" id="sideQuickPanel">
+  <a href="lvdo.html"  class="panel-item">RBT / Liv apres</a>
+  <a href="do.html" class="panel-item">Dossier</a>
+  <a href="rec.html" class="panel-item">Rec</a>
+  <a href="sav.html"  class="panel-item">SAV</a>
+  <a href="esc.html"  class="panel-item">Esc</a>
+  <a href="nb.html" class="panel-item">remarques</a>
+</div>
+
+<div class="side-overlay" id="sideOverlay"></div>
+
+<script>
+// ────────────────────────────────────────────────
+// État global
+// ────────────────────────────────────────────────
+let currentCategory = '';
+let fileQueue = [];
+let currentPosition = 0;
+let totalFiles = 0;
+let validatedCount = 0;
+
+// ────────────────────────────────────────────────
+// Stockage
+// ────────────────────────────────────────────────
+const storage = {
+  getData() { try { return JSON.parse(localStorage.getItem('file_data') || '{}'); } catch { return {}; } },
+  setData(d) { localStorage.setItem('file_data', JSON.stringify(d)); },
+  getSkipped() { try { return JSON.parse(localStorage.getItem('file_skipped') || '[]'); } catch { return []; } },
+  setSkipped(s) { localStorage.setItem('file_skipped', JSON.stringify(s)); }
+};
+
+// ────────────────────────────────────────────────
+// Toast
+// ────────────────────────────────────────────────
+function toast(msg, icon = 'icon-check') {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = `<i class="${icon}"></i> ${msg}`;
+  document.getElementById('toasts').appendChild(t);
+  setTimeout(() => t.remove(), 2500);
+}
+
+// ────────────────────────────────────────────────
+// Navigation + Init
+// ────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.nav button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[id^="page-"]').forEach(p => p.classList.add('hidden'));
+      document.getElementById(`page-${btn.dataset.page}`).classList.remove('hidden');
+      document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (btn.dataset.page === 'skipped') renderSkipped();
+      if (btn.dataset.page === 'history') renderHistory();
+    });
+  });
+
+  document.querySelectorAll('.category-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCategory = btn.dataset.cat;
+      checkStartButton();
+    });
+  });
+
+  document.getElementById('input-list').addEventListener('input', checkStartButton);
+  document.getElementById('future-date').addEventListener('input', e => {
+    let v = e.target.value.replace(/\D/g, '');
+    if (v.length > 4) v = v.slice(0,4);
+    if (v.length >= 3) v = v.slice(0,2) + '/' + v.slice(2);
+    e.target.value = v;
+  });
+
+  document.getElementById('start-btn').addEventListener('click', startProcessing);
+  document.getElementById('search-history')?.addEventListener('input', renderHistory);
+
+  updateSkippedCount();
+  renderHistory();
+
+  // زر القائمة الجانبية
+  const btn = document.getElementById('sideQuickBtn');
+  const panel = document.getElementById('sideQuickPanel');
+  const overlay = document.getElementById('sideOverlay');
+
+  function closePanel() {
+    panel.classList.remove('open');
+    overlay.classList.remove('open');
+  }
+
+  btn.addEventListener('click', () => {
+    panel.classList.toggle('open');
+    overlay.classList.toggle('open');
+  });
+
+  overlay.addEventListener('click', closePanel);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closePanel();
+  });
+});
+
+// ────────────────────────────────────────────────
+// باقي الدوال (بدون تغيير)
+// ────────────────────────────────────────────────
+
+function checkStartButton() {
+  const categorySelected = !!currentCategory;
+  const hasNumbers = !!document.getElementById('input-list').value.trim();
+  document.getElementById('start-btn').disabled = !(categorySelected && hasNumbers);
+}
+
+function startProcessing() {
+  const raw = document.getElementById('input-list').value.trim();
+  if (!raw || !currentCategory) return;
+  const nums = [...new Set(
+    raw.split(/\s+/).map(n => n.trim()).filter(n => /^\d+$/.test(n))
+  )];
+  if (!nums.length) return toast('Aucun numéro valide', 'icon-alert-triangle');
+  fileQueue = nums.map(n => ({number: n, deferred: false}));
+  currentPosition = 0;
+  totalFiles = nums.length;
+  validatedCount = 0;
+  document.getElementById('setup').classList.add('hidden');
+  document.getElementById('processing').classList.remove('hidden');
+  showCurrentFile();
+}
+
+function showCurrentFile() {
+  if (currentPosition >= fileQueue.length) return finishProcessing();
+  const item = fileQueue[currentPosition];
+  document.getElementById('current-number').textContent = item.number;
+  document.getElementById('current-category').textContent = currentCategory;
+  const done = totalFiles - fileQueue.length + currentPosition + 1;
+  const pct = Math.round((done / totalFiles) * 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `${done} / ${totalFiles} traités`;
+  document.getElementById('future-date').value = '';
+  const isDeferred = item.deferred;
+  document.getElementById('defer-btn').classList.toggle('hidden', isDeferred);
+  document.getElementById('discard-btn').classList.toggle('hidden', !isDeferred);
+}
+
+function copyCurrent() {
+  navigator.clipboard.writeText(fileQueue[currentPosition].number)
+    .then(() => toast('Copié !', 'icon-copy'));
+}
+
+function validateCurrent() {
+  const item = fileQueue[currentPosition];
+  const today = new Date();
+  const dateKey = today.toLocaleDateString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric'});
+  const futureVal = document.getElementById('future-date').value.trim();
+  const futureDate = /^\d{2}\/\d{2}$/.test(futureVal) ? futureVal : null;
+  const data = storage.getData();
+  data[dateKey] = data[dateKey] || [];
+  data[dateKey].push({
+    number: item.number,
+    category: currentCategory,
+    futureDate,
+    time: today.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'})
+  });
+  storage.setData(data);
+  validatedCount++;
+  toast('Validé', 'icon-check');
+  fileQueue.splice(currentPosition, 1);
+  showCurrentFile();
+}
+
+function deferCurrent() {
+  fileQueue[currentPosition].deferred = true;
+  const item = fileQueue.splice(currentPosition, 1)[0];
+  fileQueue.push(item);
+  toast('Reporté en fin de liste', 'icon-clock');
+  showCurrentFile();
+}
+
+function discardCurrent() {
+  const item = fileQueue[currentPosition];
+  const skipped = storage.getSkipped();
+  const today = new Date();
+  skipped.push({
+    number: item.number,
+    category: currentCategory,
+    date: today.toLocaleDateString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric'}),
+    time: today.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'})
+  });
+  storage.setSkipped(skipped);
+  fileQueue.splice(currentPosition, 1);
+  toast('Écarté', 'icon-x-circle');
+  updateSkippedCount();
+  showCurrentFile();
+}
+
+function cancelSession() {
+  if (confirm('Annuler la session en cours ?')) resetApp();
+}
+
+function finishProcessing() {
+  document.getElementById('processing').classList.add('hidden');
+  document.getElementById('completed').classList.remove('hidden');
+  document.getElementById('completed-summary').textContent =
+    `${validatedCount} fichier(s) validé(s) – Catégorie : ${currentCategory}`;
+}
+
+function resetApp() {
+  currentCategory = '';
+  fileQueue = [];
+  currentPosition = 0;
+  totalFiles = 0;
+  validatedCount = 0;
+  document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('input-list').value = '';
+  document.getElementById('future-date').value = '';
+  document.getElementById('start-btn').disabled = true;
+  document.getElementById('setup').classList.remove('hidden');
+  document.getElementById('processing').classList.add('hidden');
+  document.getElementById('completed').classList.add('hidden');
+  checkStartButton();
+}
+
+function renderSkipped() {
+  const container = document.getElementById('skipped-list');
+  const empty = document.getElementById('no-skipped');
+  const skipped = storage.getSkipped();
+  container.innerHTML = '';
+  if (!skipped.length) {
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+  skipped.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'file-item';
+    div.innerHTML = `
+      <div>
+        <span class="file-number">${item.number}</span>
+        <span class="tag" style="margin-left:0.75rem; background:#fed7aa; color:#c2410c;">${item.category}</span>
+        <div style="color:var(--text-light); font-size:0.85rem; margin-top:0.3rem;">
+          ${item.date} à ${item.time}
+        </div>
+      </div>
+      <div style="display:flex; gap:0.6rem;">
+        <button class="btn btn-outline" onclick="navigator.clipboard.writeText('${item.number}').then(()=>toast('Copié !'))">
+          <i class="icon-copy"></i>
+        </button>
+        <button class="btn btn-danger" onclick="deleteSkipped(${i})">
+          <i class="icon-trash-2"></i>
+        </button>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function deleteSkipped(i) {
+  const s = storage.getSkipped();
+  s.splice(i, 1);
+  storage.setSkipped(s);
+  renderSkipped();
+  updateSkippedCount();
+}
+
+function updateSkippedCount() {
+  const count = storage.getSkipped().length;
+  document.getElementById('skipped-count').textContent = count ? `(${count})` : '';
+}
+
+function getTodayDM() {
+  const d = new Date();
+  return d.toLocaleDateString('fr-FR', {day:'2-digit', month:'2-digit'});
+}
+
+function renderHistory() {
+  const data = storage.getData();
+  const search = document.getElementById('search-history')?.value.trim().toLowerCase() || '';
+  const todayDM = getTodayDM();
+  let due = [];
+  Object.entries(data).forEach(([date, items]) => {
+    items.forEach((it, idx) => {
+      if (it.futureDate && it.futureDate <= todayDM) {
+        due.push({ ...it, originalDate: date, idx });
+      }
+    });
+  });
+
+  const alertBox = document.getElementById('due-alerts');
+  const dueList = document.getElementById('due-list');
+  dueList.innerHTML = '';
+  if (due.length > 0) {
+    alertBox.classList.remove('hidden');
+    due.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'file-item';
+      div.style.borderColor = 'var(--danger)';
+      div.style.background = '#fef2f2';
+      div.innerHTML = `
+        <div style="flex:1;">
+          <span class="file-number">${item.number}</span>
+          <span class="tag" style="margin-left:0.75rem;">${item.category}</span>
+          <span style="color:var(--danger); margin-left:0.75rem; font-weight:600;">
+            → ${item.futureDate} (à vérifier)
+          </span>
+        </div>
+        <div style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-top:0.6rem;">
+          <button class="btn btn-success" onclick="confirmDue('${item.originalDate}', ${item.idx})">
+            <i class="icon-check"></i> Confirmé
+          </button>
+          <input type="text" id="resched-${item.originalDate}-${item.idx}" placeholder="JJ/MM" maxlength="5" style="width:100px; text-align:center;">
+          <button class="btn btn-warning" onclick="rescheduleDue('${item.originalDate}', ${item.idx})">
+            <i class="icon-clock"></i> Reporter
+          </button>
+        </div>
+      `;
+      dueList.appendChild(div);
+    });
+  } else {
+    alertBox.classList.add('hidden');
+  }
+
+  let html = '';
+  Object.keys(data)
+    .sort((a,b) => new Date(b.split('/').reverse().join('-')) - new Date(a.split('/').reverse().join('-')))
+    .forEach(date => {
+      let items = data[date].filter(it => !it.futureDate || it.futureDate > todayDM);
+      if (search) items = items.filter(it => it.number.toLowerCase().includes(search));
+      if (!items.length) return;
+      html += `<div style="margin:1.5rem 0;">
+        <div style="font-weight:600; color:var(--text-light); margin-bottom:0.75rem;">${date}</div>`;
+      items.forEach(it => {
+        html += `
+          <div class="file-item">
+            <div>
+              <span class="file-number">${it.number}</span>
+              <span class="tag" style="margin-left:0.75rem;">${it.category}</span>
+              ${it.futureDate ? `<span style="color:var(--warning); margin-left:0.75rem;">→ ${it.futureDate}</span>` : ''}
+            </div>
+            <button class="btn btn-outline" onclick="navigator.clipboard.writeText('${it.number}').then(()=>toast('Copié !'))">
+              <i class="icon-copy"></i>
+            </button>
+          </div>
+        `;
+      });
+      html += '</div>';
+    });
+  document.getElementById('history-list').innerHTML = html || '<div style="text-align:center;color:var(--text-light);padding:4rem 1rem;">Aucun enregistrement</div>';
+  setTimeout(attachDateAutoFormat, 50);
+}
+
+function confirmDue(dateKey, idx) {
+  const data = storage.getData();
+  if (data[dateKey]?.[idx]) {
+    delete data[dateKey][idx].futureDate;
+    storage.setData(data);
+    toast('Confirmé – retiré des rappels', 'icon-check');
+    renderHistory();
+  }
+}
+
+function rescheduleDue(dateKey, idx) {
+  const input = document.getElementById(`resched-${dateKey}-${idx}`);
+  const newVal = input.value.trim();
+  if (!/^\d{2}\/\d{2}$/.test(newVal)) {
+    return toast('Format JJ/MM invalide', 'icon-alert-triangle');
+  }
+  const data = storage.getData();
+  if (data[dateKey]?.[idx]) {
+    data[dateKey][idx].futureDate = newVal;
+    storage.setData(data);
+    toast(`Reporté au ${newVal}`, 'icon-clock');
+    renderHistory();
+  }
+}
+
+function attachDateAutoFormat() {
+  document.querySelectorAll('[id^="resched-"]').forEach(input => {
+    input.removeEventListener('input', autoFormatJJMM);
+    input.addEventListener('input', autoFormatJJMM);
+  });
+}
+
+function autoFormatJJMM(e) {
+  let v = e.target.value.replace(/\D/g, '');
+  if (v.length > 4) v = v.slice(0,4);
+  if (v.length >= 3) v = v.slice(0,2) + '/' + v.slice(2);
+  e.target.value = v;
+}
+
+function exportData() {
+  const data = storage.getData();
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'data.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Téléchargement démarré', 'icon-download');
+}
+
+function importData(files) {
+  if (!files?.[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      storage.setData(parsed);
+      toast('Importation réussie', 'icon-check');
+      renderHistory();
+    } catch {
+      toast('Fichier JSON invalide', 'icon-alert-triangle');
+    }
+  };
+  reader.readAsText(files[0]);
+}
+</script>
+</body>
+</html>
