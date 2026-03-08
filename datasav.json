@@ -83,4 +83,34 @@
         "Action": "-",
         "Note": "-"
     }
+    ,
+    {
+        "Raison": "retractation",
+        "Message client": "               ",
+        "Message vendeur": "Bonjour, \n\nLe client vous contacte car il souhaite se rétracter. \n\nNous vous rappelons que vous avez 48h pour lui apporter une solution conforme : \n\nAdresse de retour en France\nEtiquette de retour\nCoordonnées d’un transporteur et adresse de retour pour les produits Volumineux\n\nNous gardons le dossier sous surveillance et, conformément aux CGMAD et au Guide de la Relation Acheteur-Vendeur, nous procéderons au remboursement si vous n’apportez de solution conforme dans ce délai. \n\nMerci de votre aide, \nL’équipe Cdiscount ",
+        "Action": "           ",
+        "Note": "                      "
+    },
+    {
+        "Raison": " VDR demande infos - suivi les étapes",
+        "Message client": "Bonjour,\n\nPour pouvoir traiter votre demande, le vendeur a besoin d’informations complémentaires :\n\nNous vous remercions d'avoir suivi les étapes indiquées par le vendeur. Nous vous prions de bien vouloir nous informer si le dysfonctionnement a été résolu.\n\nA réception des informations, le vendeur vous proposera une solution de prise en charge.\n\nDe notre coté, nous veillerons à ce que cette solution soit mise en œuvre correctement et dans un délai raisonnable. Nous vous remercions de votre bonne collaboration,\n\nL'équipe Cdiscoun",
+        "Message vendeur": "Bonjour,\n\nNous accusons réception de votre réponse ; Vous avez indiqué avoir besoin d'éléments complémentaires afin d'établir un diagnostic,\n\nNous prenons contact avec le client afin d'appuyer votre demande et qu'il vous apporte les informations demandées dans les meilleurs délais.\n\nEn attendant, nous vous invitons à lui fournir une solution conforme  de prise en charge.\n\nMerci pour votre prise en charge, \n\nL’équipe Cdiscount",
+        "Action": "002",
+        "Note": "Le vendeur demande des informations, Attendre la réponse du client."
+    },
+    {
+        "Raison": "une adresse",
+        "Message client": "Bonjour\n\nNous constatons que le vendeur vous a fourni une procédure de retour conforme\n\nJe vous invite à appliquer la procédure de retour qui vous a été fourni afin de retourner votre produit\n\nJe viens donc de créditer votre compte bancaire d'un montant de 7,59 € pour avancer les frais de retour.\n\nAprès le retour, merci d'envoyer la preuve de dépôt et garder contact avec le vendeur sur le même fil de discussion.\n\nDès réception de celui-ci du produit dans son entrepôt, le vendeur prendra en charge\n\nEn cas de besoin, n'hésitez pas à demander notre intervention\n\nMerci pour votre compréhension\n\nCordialement,\nAbdelkrim,\nL'équipe Cdiscount",
+        "Message vendeur": "Bonjour,\n\nNous accusons réception de votre réponse et vous en remercions ; Vous avez confirmé au client la prise en charge que vous souhaitez mettre en place et semblez avoir tous les éléments nécessaires au bon déroulé de celle-ci.\n\nNous avançons les frais de retour au client, et nous vous laissons donc poursuivre et reviendrons vers le client et vous afin de nous assurer de la bonne suite des évènements.\n\nNous vous remercions de votre réactivité \n\nCordialement,\nL'équipe Cdiscount",
+        "Action": "544;1393",
+        "Note": "Le vendeur confirme la prise en charge. J’ai avancé les frais de retour et j’ai invité le client à retourner le produit directement au vendeur."
+    },
+    {
+        "Raison": "VDR demande info N°IMEI",
+        "Message client": "Bonjour,\n\nPour pouvoir traiter votre demande, le vendeur a besoin d’informations complémentaires :\n\n...\n \nA réception des informations, le vendeur vous proposera une solution de prise en charge.\n\nDe notre coté, nous veillerons à ce que cette solution soit mise en œuvre correctement et dans un délai raisonnable. Nous vous remercions de votre bonne collaboration,\n\nL'équipe Cdiscount",
+        "Message vendeur": "Bonjour,\n\nNous accusons réception de votre réponse ; Vous avez indiqué avoir besoin d'éléments complémentaires afin d'établir un diagnostic,\n\nNous prenons contact avec le client afin d'appuyer votre demande et qu'il vous apporte les informations demandées dans les meilleurs délais.\n\nEn attendant, nous vous invitons à lui fournir une solution conforme  de prise en charge. Je vous confirme le N°  --.\n\nMerci pour votre prise en charge, \n\nL’équipe Cdiscount \n",
+        "Action": "002",
+        "Note": "Le vendeur demande des informations, Attendre la réponse du client."
+    }
+]
 ]
