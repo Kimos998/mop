@@ -111,6 +111,13 @@
         "Message vendeur": "Bonjour,\n\nNous accusons réception de votre réponse ; Vous avez indiqué avoir besoin d'éléments complémentaires afin d'établir un diagnostic,\n\nNous prenons contact avec le client afin d'appuyer votre demande et qu'il vous apporte les informations demandées dans les meilleurs délais.\n\nEn attendant, nous vous invitons à lui fournir une solution conforme  de prise en charge. Je vous confirme le N°  --.\n\nMerci pour votre prise en charge, \n\nL’équipe Cdiscount \n",
         "Action": "002",
         "Note": "Le vendeur demande des informations, Attendre la réponse du client."
+    },
+    {
+        "Raison": "complet rbt frai de retour",
+        "Message client": "Bonjour,\n\nNous constatons que vous avez déjà retourné le produit et que vous avez payé 12,59 € de frais de livraison. Je complète le remboursement des frais de retour à hauteur de 5 €.\n\nNous vous invitons à rester en contact avec le vendeur sur le même fil de discussion.\n\nDès réception du produit dans son entrepôt, le vendeur procédera au traitement de votre demande.\n\nEn cas de besoin, n’hésitez pas à solliciter notre intervention.\n\nMerci pour votre compréhension.\n\nCordialement,\nAbdelkrim,\nL’équipe Cdiscount",
+        "Message vendeur": "Bonjour,\n\nNous accusons réception de votre réponse et vous en remercions. Vous avez confirmé au client la prise en charge que vous souhaitez mettre en place et semblez disposer de tous les éléments nécessaires à son bon déroulement.\n\nNous complétons les frais de retour du client et vous laissons donc poursuivre. Nous reviendrons vers vous ainsi que vers le client afin de nous assurer du bon déroulement de la suite des événements.\n\nNous vous remercions pour votre réactivité.\n\nCordialement,\nL’équipe Cdiscount",
+        "Action": "544;1393",
+        "Note": "Je complète le remboursement des frais de retour.\n\nLe vendeur confirme la prise en charge. Le client a déjà retourné le produit. J’ai complété le remboursement des frais de retour au client."
     }
 ]
 
