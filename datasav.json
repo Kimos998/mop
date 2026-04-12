@@ -118,6 +118,13 @@
         "Message vendeur": "Bonjour,\n\nNous accusons réception de votre réponse et vous en remercions. Vous avez confirmé au client la prise en charge que vous souhaitez mettre en place et semblez disposer de tous les éléments nécessaires à son bon déroulement.\n\nNous complétons les frais de retour du client et vous laissons donc poursuivre. Nous reviendrons vers vous ainsi que vers le client afin de nous assurer du bon déroulement de la suite des événements.\n\nNous vous remercions pour votre réactivité.\n\nCordialement,\nL’équipe Cdiscount",
         "Action": "544;1393",
         "Note": "Je complète le remboursement des frais de retour.\n\nLe vendeur confirme la prise en charge. Le client a déjà retourné le produit. J’ai complété le remboursement des frais de retour au client."
+    },
+    {
+        "Raison": "demandé d’envoyer l’appareil à un centre de reparatio",
+        "Message client": "Bonjour,\n\nNous accusons réception de votre réponse et vous en remercions.\n\nVous avez demandé au client d’envoyer l’appareil à un centre de service ... agréé afin de le faire réparer sous garantie.\n\nNous allons prendre contact avec le client afin d’effectuer le nécessaire. Si celui-ci refuse, nous vous invitons à bien vouloir lui proposer une autre solution.\n\nNous vous laissons donc poursuivre et reviendrons vers le client ainsi que vers vous afin de nous assurer de la bonne suite des événements.\n\nNous vous remercions de votre réactivité.\n\nCordialement,\nL’équipe Cdiscount",
+        "Message vendeur": "Bonjour,\n\nNous accusons réception de votre réponse et vous en remercions.\n\nVous avez demandé au client d’envoyer l’appareil à un centre de service ... agréé afin de le faire réparer sous garantie.\n\nNous allons prendre contact avec le client afin d’effectuer le nécessaire. Si celui-ci refuse, nous vous invitons à bien vouloir lui proposer une autre solution.\n\nNous vous laissons donc poursuivre et reviendrons vers le client ainsi que vers vous afin de nous assurer de la bonne suite des événements.\n\nNous vous remercions de votre réactivité.\n\nCordialement,\nL’équipe Cdiscount",
+        "Action": "002",
+        "Note": "Attendre la réponse de le client."
     }
 ]
 
