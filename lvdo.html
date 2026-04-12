@@ -467,7 +467,7 @@ function getGenreInfo() {
   return {
     sujet: isFemale ? 'Cliente informée' : 'Client informé',
     pronom: isFemale ? 'la cliente' : 'le client',
-    poss: isFemale ? 'sa' : 'sa',
+    poss: isFemale ? 'son' : 'son',
     part: isFemale ? 'occasionnée' : 'occasionné',
     accord: isFemale ? 'e' : '',
     invite: isFemale ? 'invitée' : 'invité',
@@ -506,7 +506,7 @@ function updateNote() {
   else if (mode === 'suivi') {
     const produit = document.getElementById('produit').value.trim() || 'produit';
     const lien = document.getElementById('lien_suivi').value.trim() || '';
-    text = `Bonjour,\n\nJe vous contacte aujourd’hui concernant la livraison du produit « ${produit} ».\nAprès vérification, la commande est indiquée comme livrée (${lien}).\n\nJe vous contacte donc afin de vous demander de bien vouloir confirmer la réception du produit.\n\nDans le cas contraire, nous effectuerons le nécessaire pour vous proposer une solution.\n\nMerci de bien vouloir nous confirmer la situation directement via cette discussion.\n\nJe reprendrai votre dossier dans deux jours afin de suivre l’avancement et de clôturer cette réclamation ou de mettre en place une solution adaptée.\n\nMerci de votre compréhension.\n\nCordialement,\nAbdelkrim\nL’équipe Cdiscount`;
+    text = `Bonjour,\n\nJe vous contacte aujourd’hui concernant la livraison du produit « ${produit} ».\nAprès vérification, la commande est indiquée comme livrée (${lien}).\n\nJe vous contacte donc afin de vous demander de bien vouloir confirmer la réception du produit.\n\nDans le cas contraire, nous effectuerons le nécessaire pour vous proposer une solution.\n\nMerci de bien vouloir nous confirmer la situation directement via cette discussion.\n\nJe reprendrai votre dossier dans 48h afin de suivre l’avancement et de clôturer cette réclamation ou de mettre en place une solution adaptée.\n\nMerci de votre compréhension.\n\nCordialement,\nAbdelkrim\nL’équipe Cdiscount`;
   }
   else { // remboursement
     const rawMontant = parseFloat(document.getElementById('montant').value) || 0;
