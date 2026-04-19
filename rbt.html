@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+ 
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 20px;
+    }
+    .header {
+    
+      color: white;
+      padding: 18px;
+      text-align: center;
+      font-size: 23px;
+      font-weight: bold;
+      margin-bottom: 25px;
+      border-radius: 8px;
+    }
+    .container {
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .checkbox-group {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    label {
+      display: flex;
+      align-items: center;
+      padding: 8px 10px;
+      font-size: 14.5px;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+    label:hover {
+      background: #f0f7ff;
+    }
+    input[type="checkbox"] {
+      margin-right: 10px;
+      accent-color: #1e73be;
+    }
+    .result {
+      background: white;
+      border: 2px solid #1e73be;
+      border-radius: 10px;
+      padding: 18px;
+      font-size: 15.5px;
+      line-height: 1.7;
+      color: #333;
+      margin-bottom: 18px;
+      min-height: 68px;
+    }
+    .copy-btn {
+      background: #4285f4;
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 8px;
+      display: block;
+      margin: 0 auto;
+    }
+    .copy-btn:hover {
+      background: #3367d6;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">Scénarios de Remboursement</div>
+
+  <div class="container">
+    <div class="checkbox-group" id="checkboxGroup">
+      <!-- سيتم ملؤها بالجافاسكريبت -->
+    </div>
+
+    <div class="result" id="resultText">
+      Sélectionnez une ou plusieurs raisons
+    </div>
+
+    <button class="copy-btn" onclick="copyText()">Copier</button>
+  </div>
+
+  <script>
+    const scenarios = [
+      "Colis en retour",
+      "Le lien de suivi ne fonctionne pas",
+      "Le délai de MEA est dépassé",
+      "Le vendeur confirme le remboursement",
+      "La réponse du vendeur est non conforme",
+      "Le délai est dépassé",
+      "Le client ne souhaite plus attendre",
+      "Le vendeur ne répond pas"
+    ];
+
+    // إنشاء الـ checkboxes في عمودين
+    function createCheckboxes() {
+      const group = document.getElementById("checkboxGroup");
+      group.innerHTML = "";
+
+      scenarios.forEach(text => {
+        const label = document.createElement("label");
+        label.innerHTML = `
+          <input type="checkbox" value="${text}" onchange="updateText()">
+          ${text}
+        `;
+        group.appendChild(label);
+      });
+    }
+
+    function updateText() {
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+      const resultDiv = document.getElementById("resultText");
+      
+      if (checkboxes.length === 0) {
+        resultDiv.textContent = "Sélectionnez une ou plusieurs raisons";
+        return;
+      }
+
+      let texts = [];
+      checkboxes.forEach(cb => texts.push(cb.value));
+
+      const finalText = texts.join(", ") + ", je rembourse.";
+      resultDiv.textContent = finalText;
+    }
+
+    function copyText() {
+      const text = document.getElementById("resultText").textContent.trim();
+      
+      if (text.includes("Sélectionnez une ou plusieurs")) {
+        alert("Veuillez sélectionner au moins une raison !");
+        return;
+      }
+
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector(".copy-btn");
+        const original = btn.textContent;
+        btn.textContent = "✓ Copié";
+        setTimeout(() => btn.textContent = "Copier", 1600);
+      });
+    }
+
+    // تشغيل عند تحميل الصفحة
+    window.onload = createCheckboxes;
+  </script>
+</body>
+</html>
