@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Scénarios & Statut Livraison</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 20px;
+    }
+
+    /* منطقة الأزرار */
+    .nav-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .nav-btn {
+      padding: 14px 28px;
+      font-size: 17px;
+      font-weight: bold;
+      background: #e0e0e0;
+      color: #333;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      min-width: 220px;
+    }
+
+    .nav-btn.active {
+      background: #1e73be;
+      color: white;
+      box-shadow: 0 4px 12px rgba(30, 115, 190, 0.3);
+    }
+
+    .nav-btn:hover:not(.active) {
+      background: #d0d0d0;
+    }
+
+    /* الأقسام */
+    .section {
+      display: none;
+    }
+    .section.active {
+      display: block;
+    }
+
+    .controls {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .controls select {
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background: white;
+      cursor: pointer;
+    }
+
+    .container {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .card {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      width: 340px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-content {
+      padding: 20px;
+      font-size: 14px;
+      line-height: 1.65;
+      color: #333;
+      flex-grow: 1;
+      white-space: pre-wrap;
+    }
+    .copy-btn {
+      background: #4285f4;
+      color: white;
+      border: none;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+    }
+    .copy-btn:hover {
+      background: #3367d6;
+    }
+
+    .wider .card {
+      width: 360px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- الأزرار -->
+  <div class="nav-buttons">
+    <button class="nav-btn active" id="btnScenarios" onclick="switchTo('scenarios')">
+      Scénarios d’appel
+    </button>
+    <button class="nav-btn" id="btnStatut" onclick="switchTo('statut')">
+      Statut de Livraison
+    </button>
+  </div>
+
+  <!-- قسم Scénarios d’appel -->
+  <div id="scenarios" class="section active">
+    <div class="controls">
+      <select id="genderSelect1" onchange="changeAllGender()">
+        <option value="male">Client</option>
+        <option value="female">Cliente</option>
+      </select>
+    </div>
+    <div class="container">
+      <div class="card">
+        <div class="card-content" data-male="Le client confirme qu’il a bien reçu son colis. Je l’ai informé que je suis en train de clôturer le dossier."></div>
+        <button class="copy-btn" onclick="copyText(this)">Copier</button>
+      </div>
+      <div class="card">
+        <div class="card-content" data-male="J’ai essayé de contacter le client pour l’informer que sa commande est marquée comme livrée, mais l’appel a échoué. Le client ne répond pas et il est impossible de laisser un message vocal."></div>
+        <button class="copy-btn" onclick="copyText(this)">Copier</button>
+      </div>
+      <div class="card">
+        <div class="card-content" data-male="J’ai informé le client que sa commande est marquée comme livrée depuis le 14/04. Dans ce cas, je suis en train de clôturer le dossier concernant la livraison. Si il constate un souci avec le produit, je l’ai invité à le signaler."></div>
+        <button class="copy-btn" onclick="copyText(this)">Copier</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- قسم Statut de Livraison -->
+  <div id="statut" class="section">
+    <div class="controls">
+      <select id="genderSelect2" onchange="updateAll()">
+        <option value="male">Client</option>
+        <option value="female">Cliente</option>
+      </select>
+      <select id="statusSelect" onchange="updateAll()">
+        <option value="encours">En cours de livraison</option>
+        <option value="expedie">Bien expédiée</option>
+        <option value="nonexpedie">Toujours non expédiée</option>
+      </select>
+    </div>
+    <div class="container wider">
+      <div class="card">
+        <div class="card-content" data-base="J’ai informé la cliente que sa commande est toujours en cours de livraison. Je l’ai invitée à confirmer si elle souhaite encore attendre et, le cas échéant, combien de jours supplémentaires elle souhaite patienter. Sinon, elle peut demander le remboursement."></div>
+        <button class="copy-btn" onclick="copyText(this)">Copier</button>
+      </div>
+      <div class="card">
+        <div class="card-content" data-base="J’ai informé la cliente que sa commande est toujours en cours de livraison. Je l’ai invitée à confirmer si elle souhaite encore attendre ou demander un remboursement. La cliente a demandé à attendre."></div>
+        <button class="copy-btn" onclick="copyText(this)">Copier</button>
+      </div>
+      <div class="card">
+        <div class="card-content" data-base="J’ai informé la cliente que sa commande est toujours en cours de livraison. Je l’ai invitée à confirmer si elle souhaite encore attendre ou demander un remboursement. La cliente a demandé à attendre. Elle souhaite patienter 2 jours supplémentaires ; si le vendeur ne reçoit pas le produit dans ce délai, elle demandera le remboursement."></div>
+        <button class="copy-btn" onclick="copyText(this)">Copier</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // تبديل بين الأقسام
+    function switchTo(section) {
+      // إخفاء كل الأقسام
+      document.getElementById('scenarios').classList.remove('active');
+      document.getElementById('statut').classList.remove('active');
+
+      // تفعيل القسم المطلوب
+      document.getElementById(section).classList.add('active');
+
+      // تحديث حالة الأزرار
+      document.getElementById('btnScenarios').classList.toggle('active', section === 'scenarios');
+      document.getElementById('btnStatut').classList.toggle('active', section === 'statut');
+    }
+
+    // ====== دوال Scénarios d’appel ======
+    const maleTexts = [
+      "Le client confirme qu’il a bien reçu son colis. Je l’ai informé que je suis en train de clôturer le dossier.",
+      "J’ai essayé de contacter le client pour l’informer que sa commande est marquée comme livrée, mais l’appel a échoué. Le client ne répond pas et il est impossible de laisser un message vocal.",
+      "J’ai informé le client que sa commande est marquée comme livrée depuis le 14/04. Dans ce cas, je suis en train de clôturer le dossier concernant la livraison. Si il constate un souci avec le produit, je l’ai invité à le signaler."
+    ];
+
+    function changeAllGender() {
+      const isFemale = document.getElementById('genderSelect1').value === "female";
+      const contents = document.querySelectorAll('#scenarios .card-content');
+      
+      contents.forEach((content, index) => {
+        let text = maleTexts[index];
+        if (isFemale) {
+          text = text
+            .replace(/Le client/g, "La cliente")
+            .replace(/le client/g, "la cliente")
+            .replace(/il a/g, "elle a")
+            .replace(/qu’il a/g, "qu’elle a")
+            .replace(/Je l’ai informé/g, "Je l’ai informée")
+            .replace(/je l’ai invité/g, "je l’ai invitée")
+            .replace(/Si il constate/g, "Si elle constate");
+        } else {
+          text = text
+            .replace(/La cliente/g, "Le client")
+            .replace(/la cliente/g, "le client")
+            .replace(/elle a/g, "il a")
+            .replace(/qu’elle a/g, "qu’il a")
+            .replace(/Je l’ai informée/g, "Je l’ai informé")
+            .replace(/je l’ai invitée/g, "je l’ai invité")
+            .replace(/Si elle constate/g, "Si il constate");
+        }
+        content.textContent = text;
+      });
+    }
+
+    // ====== دوال Statut de Livraison ======
+    function updateAll() {
+      const isFemale = document.getElementById("genderSelect2").value === "female";
+      const statusValue = document.getElementById("statusSelect").value;
+      
+      const contents = document.querySelectorAll('#statut .card-content');
+      
+      contents.forEach(content => {
+        let text = content.dataset.base;
+
+        if (statusValue === "encours") {
+          text = text.replace(/est toujours en cours de livraison/g, "est toujours en cours de livraison");
+        } else if (statusValue === "expedie") {
+          text = text.replace(/est toujours en cours de livraison/g, "est bien expédiée");
+        } else if (statusValue === "nonexpedie") {
+          text = text.replace(/est toujours en cours de livraison/g, "est toujours non expédiée");
+        }
+
+        if (isFemale) {
+          text = text
+            .replace(/le client/g, "la cliente")
+            .replace(/Le client/g, "La cliente")
+            .replace(/il a/g, "elle a")
+            .replace(/qu’il a/g, "qu’elle a")
+            .replace(/Je l’ai informé/g, "Je l’ai informée")
+            .replace(/je l’ai invité/g, "je l’ai invitée")
+            .replace(/informé/g, "informée")
+            .replace(/invité/g, "invitée");
+        } else {
+          text = text
+            .replace(/la cliente/g, "le client")
+            .replace(/La cliente/g, "Le client")
+            .replace(/elle a/g, "il a")
+            .replace(/qu’elle a/g, "qu’il a")
+            .replace(/Je l’ai informée/g, "Je l’ai informé")
+            .replace(/je l’ai invitée/g, "je l’ai invité")
+            .replace(/informée/g, "informé")
+            .replace(/invitée/g, "invité");
+        }
+        
+        content.textContent = text;
+      });
+    }
+
+    // نسخ النص
+    function copyText(btn) {
+      const content = btn.previousElementSibling;
+      const text = content.textContent.trim();
+      
+      navigator.clipboard.writeText(text).then(() => {
+        const original = btn.textContent;
+        btn.textContent = "✓ Copié";
+        setTimeout(() => btn.textContent = original, 1500);
+      });
+    }
+
+    // تحميل الصفحة
+    window.onload = function() {
+      // تحميل نصوص Scénarios
+      const scenarioContents = document.querySelectorAll('#scenarios .card-content');
+      scenarioContents.forEach((content, index) => {
+        content.textContent = maleTexts[index];
+      });
+      
+      // تحميل Statut
+      updateAll();
+    };
+  </script>
+</body>
+</html>
