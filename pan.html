@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SAV & Retours Cdiscount</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/lucide-static@latest/font/lucide.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-500: #6b7280;
+      --gray-700: #374151;
+      --gray-900: #111827;
+      --success: #10b981;
+      --radius-sm: 8px;
+      --radius: 12px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+      --transition: all 0.2s ease;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-900);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem;
+    }
+    .top-bar {
+      background: white;
+      border-radius: var(--radius);
+      border: 1px solid var(--gray-200);
+      padding: 0.75rem;
+      margin-bottom: 1.75rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .search-input {
+      width: 100%;
+      padding: 0.65rem 1rem;
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      color: var(--gray-900);
+      outline: none;
+      transition: var(--transition);
+    }
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+    }
+    .filters-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: center;
+    }
+    .filter-btn {
+      padding: 0.6rem 1.15rem;
+      border: 1px solid var(--gray-300);
+      background: white;
+      border-radius: var(--radius);
+      font-weight: 500;
+      color: var(--gray-700);
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+    .filter-btn:hover {
+      border-color: var(--primary);
+      background: rgba(59,130,246,0.04);
+      color: var(--primary);
+    }
+    .filter-btn.active {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: white;
+      font-weight: 600;
+    }
+    .cartes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 1.5rem;
+    }
+    .carte {
+      background: white;
+      border-radius: var(--radius);
+      border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    .carte:hover {
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.06);
+    }
+    .entete {
+      padding: 0.9rem 1.25rem;
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--gray-900);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .entete span {
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      font-size: 0.9rem;
+    }
+    .texte {
+      padding: 1.25rem;
+      white-space: pre-wrap;
+      font-family: 'Courier New', Consolas, monospace;
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: var(--gray-700);
+      background: white;
+      min-height: 160px;
+      max-height: 520px;
+      overflow-y: auto;
+    }
+    .btn {
+      padding: 0.55rem 1.1rem;
+      border-radius: var(--radius-sm);
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: var(--transition);
+      font-size: 0.88rem;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+    .toast-container {
+      position: fixed;
+      top: 1.25rem;
+      right: 1.25rem;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .toast {
+      background: var(--gray-900);
+      color: white;
+      padding: 0.9rem 1.4rem;
+      border-radius: var(--radius);
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.5s forwards;
+    }
+    @keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes fadeOut { to { opacity: 0; transform: translateY(-12px); } }
+
+    .side-quick-btn {
+      position: fixed;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      background: rgba(100, 116, 139, 0.22);
+      color: #475569;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      font-weight: 500;
+      cursor: pointer;
+      z-index: 800;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      transition: all 0.22s ease;
+      opacity: 0.65;
+    }
+    .side-quick-btn:hover {
+      background: rgba(100, 116, 139, 0.38);
+      opacity: 1;
+      transform: translateY(-50%) scale(1.08);
+    }
+    .side-quick-panel {
+      position: fixed;
+      right: -240px;
+      top: 0;
+      width: 220px;
+      height: 100%;
+      background: #f8fafc;
+      border-left: 1px solid #e2e8f0;
+      transition: right 0.28s ease;
+      z-index: 780;
+      padding: 3rem 0.8rem 1.2rem;
+      color: #1e293b;
+    }
+    .side-quick-panel.open { right: 0; }
+    .panel-item {
+      display: block;
+      padding: 0.9rem 1.1rem;
+      color: #334155;
+      text-decoration: none;
+      font-size: 1.02rem;
+      border-radius: 8px;
+      margin: 0.4rem 0;
+      transition: all 0.18s ease;
+    }
+    .panel-item:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding-left: 1.4rem;
+    }
+    .side-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.25);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.28s ease;
+      z-index: 770;
+    }
+    .side-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    @media (max-width: 900px) {
+      .cartes { grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }
+    }
+    @media (max-width: 600px) {
+      .top-bar { padding: 0.6rem; }
+      .filter-btn { padding: 0.55rem 0.95rem; font-size: 0.86rem; }
+      .container { padding: 1rem 0.75rem; }
+      .side-quick-btn { width: 44px; height: 44px; font-size: 24px; right: 12px; }
+      .side-quick-panel { width: 200px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="toast-container" id="toasts"></div>
+
+  <div class="top-bar">
+    <input type="text" id="searchInput" class="search-input" placeholder="Rechercher un modèle (ex: retour, remboursement, 2249, diagnostic, étiquette...)">
+    <div class="filters-wrapper" id="liste-boutons"></div>
+  </div>
+
+  <div class="cartes">
+    <div class="carte">
+      <div class="entete">
+        <span>Message pour le client</span>
+        <button class="btn btn-primary" onclick="copier('client', this)">
+          <i class="icon-copy"></i> <span>Copier</span>
+        </button>
+      </div>
+      <div class="texte" id="client"></div>
+    </div>
+    <div class="carte">
+      <div class="entete">
+        <span>Message pour le vendeur</span>
+        <button class="btn btn-primary" onclick="copier('vendeur', this)">
+          <i class="icon-copy"></i> <span>Copier</span>
+        </button>
+      </div>
+      <div class="texte" id="vendeur"></div>
+    </div>
+    <div class="carte">
+      <div class="entete">
+        <span>Action / Note</span>
+        <button class="btn btn-primary" onclick="copier('action', this)">
+          <i class="icon-copy"></i> <span>Copier</span>
+        </button>
+      </div>
+      <div class="texte" id="action"></div>
+    </div>
+  </div>
+</div>
+
+<div class="side-quick-btn" id="sideQuickBtn">⋮</div>
+
+<div class="side-quick-panel" id="sideQuickPanel">
+  <a href="lvdo.html" class="panel-item">RBT / Liv apres</a>
+  <a href="do.html" class="panel-item">Dossier</a>
+  <a href="rec.html" class="panel-item">Rec</a>
+  <a href="sav.html" class="panel-item">SAV</a>
+  <a href="esc.html" class="panel-item">Esc</a>
+  <a href="nb.html" class="panel-item">remarques</a>
+  <a href="liv.html" class="panel-item">lv/exp</a>
+  <a href="rbt.html" class="panel-item">RBT</a>
+</div>
+
+<div class="side-overlay" id="sideOverlay"></div>
+
+<script>
+function toast(msg, icon = 'icon-check') {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = `<i class="${icon}"></i> ${msg}`;
+  document.getElementById('toasts').appendChild(t);
+  setTimeout(() => t.remove(), 2750);
+}
+
+const modeles = [
+  {
+    raison: "Relance VDR - Produit livré (ME 6j)",
+    client: "Bonjour,\n\nJe viens de relancer le vendeur afin d’obtenir une solution conforme, que ce soit une réparation, un remplacement ou un remboursement, car le produit a bien été livré au vendeur.\n\nJe vous tiendrai informé dès que j’aurai une réponse.\n\nCordialement,\nAbdelkrim\nL'équipe Cdiscount",
+    vendeur: "Bonjour,\n\nNous vous informons que le colis retourné par le client a été livré à votre adresse le   \n\nNous vous remercions de bien vouloir prendre en charge sa demande et de lui fournir des informations claires sur l’avancement de son dossier.\n\nSans réponse favorable de votre part dans les plus brefs délais, un remboursement sera déclenché à votre charge.\n\nDans l’attente de votre retour rapide.\n\nCordialement,\nAbdelkrim\nL'équipe Cdiscount",
+    action: "2249- Mise en attente 6 jours\t\tLe client a déjà retourné le produit : 88500070750925K // En attente d une solution adaptée."
+  },
+  {
+    raison: "Demande infos diagnostic (ME 5j)",
+    client: "Bonjour,\n\nPour pouvoir traiter votre demande, le vendeur a besoin d’informations complémentaires :\n\nLe véhicule avec la batterie correctement branchée.\nLa tentative d'allumage en appuyant sur le bouton de démarrage.\nLa réaction du véhicule (ou l'absence de réaction).\nSi possible, les phares, les sons ou tout autre élément qui fonctionne ou ne fonctionne pas.\n\nA réception des informations, le vendeur vous proposera une solution de prise en charge.\n\nDe notre coté, nous veillerons à ce que cette solution soit mise en œuvre correctement et dans un délai raisonnable. Nous vous invitons à rester en contact avec votre vendeur directement depuis ce fil de discussion et vous remercions de votre bonne collaboration,\n\nL'équipe Cdiscount",
+    vendeur: "Bonjour,\n\nNous accusons réception de votre réponse et vous en remercions ; Vous avez indiqué avoir besoin d'éléments complémentaires afin d'établir un diagnostic,\n\nNous prenons contact avec le client afin d'appuyer votre demande et qu'il vous apporte les informations demandées dans les meilleurs délais,\n\nNous vous laissons donc poursuivre et reviendrons vers le client et vous dans 5 jours afin de nous assurer de la bonne suite des évènements.\n\nNous vous remercions de votre réactivité et comptons sur vous pour une résolution dans les délais de cette panne .\n\nBonne journée,",
+    action: "391- Mise en attente - 5 jours\t\tAttendre la réponse du client."
+  },
+  {
+    raison: "Remboursement frais retour + Relance VDR",
+    client: "Bonjour,\n\nNous constatons que vous avez bien retourné le produit et avancé les frais de livraison pour ce retour.\n\nJe viens donc de procéder au remboursement de vos frais de retour, pour un montant de 13,87 €.\n\nConcernant le téléphone, je viens de relancer le vendeur afin qu'il nous apporte une solution adaptée et conforme, qu'il s'agisse d'une réparation, d'un remplacement ou d'un remboursement, étant donné que le produit a bien été réceptionné par ses services.\n\nJe ne manquerai pas de vous tenir informé dès réception de son retour.\n\nNous vous remercions pour votre patience et votre compréhension.\n\nCordialement,\n\nAbdelkrim L'équipe Cdiscount",
+    vendeur: "-",
+    action: "-"
+  },
+  {
+    raison: "Étiquette déjà retournée (ME 10j)",
+    client: "Bonjour,\n\nNous constatons que vous avez déjà procédé au retour du produit auprès du vendeur.\n\nNous vous invitons à conserver précieusement votre preuve de dépôt, celle-ci pourra vous être demandée en cas de besoin.\n\nSoyez rassuré , dès que le vendeur aura confirmé la bonne réception du produit retourné, nous pourrons mettre en place une solution adaptée à votre situation et assurer le suivi de votre dossier.\n\nNous restons à votre disposition et vous remercions pour votre patience et votre confiance.\n\nCordialement,\n\nL’équipe Cdiscount",
+    vendeur: "Bonjour,\n\nNous accusons réception de votre réponse et vous en remercions.\n\nVous avez confirmé au client la solution de prise en charge envisagée et disposez désormais, semble-t-il, de l'ensemble des éléments nécessaires à sa mise en œuvre.\n\nNous vous invitons donc à poursuivre les démarches engagées. Nous reprendrons contact avec vous ainsi qu'avec le client dans un délai de 10 jours afin de nous assurer du bon déroulement de la prise en charge et de l'avancement de la résolution du problème.\n\nDans l'intervalle, nous vous invitons à communiquer directement sur ce fil toute nouvelle information ou avancée concernant le dossier, notamment :\n\nLe lien de suivi en cas de réexpédition du produit ;\nLa date de prise en charge ou de rendez-vous, le cas échéant ;\nLe délai prévisionnel de résolution ;\nToute autre information utile au suivi de la demande.\n\nNous vous remercions pour votre réactivité et comptons sur votre engagement afin de garantir une résolution dans les meilleurs délais.\n\nBonne journée,\n\nL'équipe Cdiscount",
+    action: "-"
+  },
+  {
+    raison: "Produit retourné - VDR confirme réexpédition",
+    client: "Bonjour,\n\nLe vendeur a confirmé la prise en charge qu'il souhaite mettre en place et notons que vous êtes satisfait de cette réponse. Nous le laissons donc poursuivre et reviendrons vers vous dans 10 jours afin de nous assurer de la bonne suite des évènements.\n\nNous vous invitons à rester en contact avec votre vendeur directement depuis ce fil de discussion et vous remercions de votre bonne collaboration,\n\nL'équipe Cdiscount",
+    vendeur: "Bonjour,\n\nNous accusons réception de votre réponse et vous en remercions.\n\nVous avez confirmé au client la prise en charge de l’échange de son appareil. Nous vous remercions donc de bien vouloir lui communiquer un numéro de suivi valide lui permettant de suivre l’acheminement du nouvel appareil.\n\nMerci de regrouper dans une seule réponse l’ensemble des informations et justificatifs demandés afin de garantir un suivi efficace du dossier.\n\nÀ défaut de réponse complète dans les meilleurs délais, nous pourrons être amenés à procéder au remboursement de la commande.\n\nNous comptons sur votre réactivité afin d’assurer une résolution rapide de ce problème.\n\nBonne journée,\n\nAbdelkrim\nL’équipe Cdiscount",
+    action: "2249- Mise en attente 6 jours\tLe vendeur confirme l’échange. En attente du numéro de suivi."
+  },
+  {
+    raison: "Étiquette retour - Client n'a pas retourné",
+    client: "Bonjour,\n\nAfin de retourner votre produit, nous vous invitons à suivre les instructions communiquées par le vendeur.\n\nCe dernier vous a fourni une étiquette de retour. Nous vous invitons à vous rendre au point de dépôt le plus proche prenant en charge cette étiquette.\n\nPensez à conserver votre preuve de dépôt et à la télécharger directement depuis votre espace client.\n\nDès que le vendeur aura confirmé la réception du produit retourné, une solution adaptée à votre situation pourra être mise en place.\n\nNous vous remercions pour votre compréhension et votre collaboration.\n\nCordialement,\n\nL’équipe Cdiscount",
+    vendeur: "Bonjour,\n\nNous accusons réception de votre réponse et vous en remercions.\n\nVous avez confirmé au client la solution de prise en charge envisagée et disposez désormais, semble-t-il, de l'ensemble des éléments nécessaires à sa mise en œuvre.\n\nNous vous invitons donc à poursuivre les démarches engagées. Nous reprendrons contact avec vous ainsi qu'avec le client dans un délai de 10 jours afin de nous assurer du bon déroulement de la prise en charge et de l'avancement de la résolution du problème.\n\nDans l'intervalle, nous vous invitons à communiquer directement sur ce fil toute nouvelle information ou avancée concernant le dossier, notamment :\n\nLe lien de suivi en cas de réexpédition du produit ;\nLa date de prise en charge ou de rendez-vous, le cas échéant ;\nLe délai prévisionnel de résolution ;\nToute autre information utile au suivi de la demande.\n\nNous vous remercions pour votre réactivité et comptons sur votre engagement afin de garantir une résolution dans les meilleurs délais.\n\nBonne journée,\n\nL'équipe Cdiscount",
+    action: "me 6j"
+  },
+  {
+    raison: "VDR ne répond pas - Remboursement",
+    client: "Bonjour,\n\nVous ne souhaitez pas patienter plus longtemps pour la réparation de votre produit. Nous prenons bien en compte votre choix ! Nous procédons ce jour au remboursement de cette commande.\n\nDes que le vendeur vous donnera une procédure de retour, il vous faudra obligatoirement renvoyer le produit.\n\nMerci pour votre compréhension,\n\nL'équipe Cdiscount",
+    vendeur: "Bonjour,\n\nA ce jour, vous n'avez pas répondu au client et ainsi n’avez pas respecté les CGMAD.\n\nLe client ne souhaitant pas attendre plus longtemps et n’ayant pas de procédure de retour à sa disposition, nous procédons ce jour au remboursement de la commande à vos frais.\n\nNous vous invitons a mettre au disposition une adresse de retour si vous souhaitez récupérer votre produit.\n\nBonne journée\n\nL'équipe Cdiscount",
+    action: "J’ai informé le client que son remboursement de 466 € est disponible sur son espace client Cdiscount et qu’il peut le transférer sur son compte bancaire. Je l’ai également invité à retourner le produit au vendeur si celui-ci en fait la demande."
+  },
+  {
+    raison: "Rappel délai 72h / 48h ouvrées (2305)",
+    client: "-",
+    vendeur: "Bonjour,\n\nNous accusons réception de votre réponse et vous en remercions.\n\nNous vous rappelons que ce dernier doit être posé dans les 72 h et qu'une des solutions suivantes doit être enclenchée :\n\n- Etiquette de retour prépayée ou coordonnées d'un transporteur et date d'enlèvement pour un produit volumineux\n\n- Le remplacement du produit défectueux\n\n- La réparation du produit en panne\n\n- Le remboursement du produit\n\nPouvez vous apporter une réponse dans les 48 h ouvres en indiquant la solution que vous allez mettre en place?\n\nNous vous remercions de votre réactivité et comptons sur votre confirmation de prise en charge de la demande du client.\n\nBonne journée,",
+    action: "2305"
+  },
+  {
+    raison: "Demande preuve de retour (392 - ME 7j)",
+    client: "Bonjour,\n\nNous vous remercions pour votre message.\n\nAfin de traiter votre demande, nous avons besoin de localiser votre colis en retour.\n\nNous vous invitons à déposer une preuve de retour mentionnant l’adresse du destinataire ainsi que le numéro de suivi, afin de savoir où le colis a été retourné.\n\nNous vous invitons à rester en contact avec votre vendeur directement dans cette discussion.\n\nNous vous remercions pour votre compréhension.\n \nL'équipe Cdiscount",
+    vendeur: "-",
+    action: "392- Mise en attente - 7 jours\t\tj'ai invité le client à nous fournir une preuve de retour qui mentionne l'adresse de destinataire, ainsi que le numéro de suivi du colis afin de le localiser et donner suite à la prise en charge de sa demande."
+  },
+  {
+    raison: "VDR fournit procédure retour conforme (1836)",
+    client: "Bonjour,\n\nLe vendeur a confirmé la prise en charge qu'il souhaite mettre en place et notons que vous êtes satisfait de cette réponse. Nous le laissons donc poursuivre et reviendrons vers vous dans 10 jours afin de nous assurer de la bonne suite des évènements.\n\nNous vous invitons à suivre les instructions données ( retour du produit  / tests à effectuer ou autre) et à rester en contact avec votre vendeur directement depuis ce fil de discussion. Nous vous remercions de votre bonne collaboration,\n\nL'équipe Cdiscount",
+    vendeur: "Message de CDiscount à Green Scoot FR le 12/11/2026 à 10:53\nBonjour,\n\nNous accusons réception de votre réponse et vous en remercions ; Vous avez confirmé au client la prise en charge que vous souhaitez mettre en place et semblez avoir tous les éléments nécessaires au bon déroulé de celle-ci.\n\nNous vous laissons donc poursuivre et reviendrons vers le client et vous dans 10 jours afin de nous assurer de la bonne suite des évènements.\n\nDans cet intervalle, n ‘hésitez pas à partager sur ce fil toutes avancées, informations utiles tel que lien de suivi si renvoi, pris e en RDV, délai de résolution cible ect….\n\nNous vous remercions de votre réactivité et comptons sur vous pour une résolution dans les délais de cette panne .\n\nBonne journée,",
+    action: "1836- Mise en attente - 10 jours\t\tEn attente du retour du produit : 792895501697\nJ’ai informé la cliente que le vendeur a bien fourni une procédure de retour conforme. Je l’ai invitée à retourner le produit à l’aide de l’étiquette de retour et à patienter. De notre côté, nous assurerons le suivi du retour du produit."
+  },
+  {
+    raison: "Renvoyer produit avec étiquette (22/09/2026)",
+    client: "Bonjour,\n\nLe vendeur vous a proposé une solution conforme pour renvoyer votre produit.\n\nVous pouvez maintenant renvoyer votre produit en imprimant l'étiquette de retour fournie par le vendeur le 22/09/2026.\n\nPensez à conserver la preuve de dépôt de votre colis.\n\nA bientôt,\nL’équipe Cdiscount",
+    vendeur: "-",
+    action: "-"
+  },
+  {
+    raison: "VDR confirme le remboursement (26/10/2026)",
+    client: "-",
+    vendeur: "Bonjour,\n\nA la lecture de votre message du 26/10/2026, nous notons que vous souhaitez procéder au remboursement de cette commande.\n\nNous procédons donc ce jour au remboursement de la commande à vos frais et en informons le client.\n\nBonne journée",
+    action: "-"
+  },
+  {
+    raison: "Produit déjà retourné - Livré 04/09/2026",
+    client: "Bonjour,\nLe suivi du colis indique que le vendeur a reçu votre colis le 04/09/2026 : https://www.laposte.fr/outils/suivre-vos-envois?code=8U02212114162\n\nNous vous invitons à patienter encore quelques jours afin que le retour soit pleinement enregistré et vérifié par le vendeur.\n\nNous vous invitons à rester en contact avec votre vendeur dans cette discussion et n'hésitez pas à demander notre intervention depuis voter espace client en cas de besoin.\n\nMerci pour votre compréhension,\nL'équipe Cdiscount",
+    vendeur: "Bonjour,\n\nLe client attend une solution suite au renvoi de son colis. Le lien de suivi indique que le colis est livré le 04/09/2026 https://www.laposte.fr/outils/suivre-vos-envois?code=8U02212114162. Nous vous rappelons qu'à réception du colis. Vous devez mettre en œuvre la solution proposée au client. Nous vous invitons à la mettre en œuvre au plus vite.\n\nNous vous remercions pour votre prise en charge,\nHanae\nL'équipe Cdiscount",
+    action: "-"
+  },
+  {
+    raison: "Adresse retour + Frais 7,59 € (ETelephone)",
+    client: "Bonjour,\n\nNous vous invitons à renvoyer le produit à l'adresse communiquée par le vendeur.\nUn remboursement d'un montant de 7,59 € seront visibles sur votre compte bancaire sous 3 à 5 jours pour couvrir les frais de retour.\n\nNous vous remercions pour votre compréhension.\n\nCordialement,\nL'équipe Cdiscount",
+    vendeur: "Message de CDiscount à ETelephone le 01/09/2026 à 16:28\nBonjour,\n\nNous accusons réception de votre réponse et vous en remercions ; Vous avez confirmé au client la prise en charge que vous souhaitez mettre en place et semblez avoir tous les éléments nécessaires au bon déroulé de celle-ci.\n\nNous vous laissons donc poursuivre et reviendrons vers le client et vous  afin de nous assurer de la bonne suite des évènements.\n\nNB: le client souhaite avoir un échange de la même référence ou une réparation.\n\nNous vous remercions de votre réactivité \n\nCordialement,\n\nL'équipe Cdiscount",
+    action: "-"
+  },
+  {
+    raison: "Adresse retour + Preuve + Frais 7,59 € (ME 10j)",
+    client: "Bonjour,\n\nLe vendeur a confirmé la prise en charge qu’il souhaite mettre en place.  \n\nNous le laissons donc poursuivre les démarches et reviendrons vers vous dans un délai de 10 jours afin de nous assurer du bon déroulement de la procédure.\n\nNous vous invitons à retourner le produit à l’adresse communiquée par le vendeur.\n\nUn remboursement de 7,59 €, correspondant aux frais de retour, sera crédité sur votre compte bancaire sous un délai de 3 à 5 jours.\n\nNous vous invitons à suivre les instructions communiquées par le vendeur et à nous transmettre une preuve de dépôt ainsi que le numéro de suivi afin de pouvoir suivre l’acheminement du colis.\n\nNous vous remercions également de rester en contact avec votre vendeur directement depuis ce fil de discussion.\n\nNous vous remercions pour votre collaboration.\n\nCordialement,\n\nL’équipe Cdiscount",
+    vendeur: "Bonjour,\n\nNous accusons réception de votre réponse et vous en remercions ; Vous avez confirmé au client la prise en charge que vous souhaitez mettre en place et semblez avoir tous les éléments nécessaires au bon déroulé de celle-ci.\n\nNous vous laissons donc poursuivre et reviendrons vers le client et vous dans 10 jours afin de nous assurer de la bonne suite des évènements.\n\nDans cet intervalle, n ‘hésitez pas à partager sur ce fil toutes avancées, informations utiles tel que lien de suivi si renvoi, pris e en RDV, délai de résolution cible ect….\n\nNous vous remercions de votre réactivité et comptons sur vous pour une résolution dans les délais de cette panne .\n\nBonne journée,",
+    action: "-"
+  },
+  {
+    raison: "2 solutions VDR + Remboursement 8,08 €",
+    client: "Bonjour,\n\nLe vendeur vous propose deux solutions :\n\nL’envoi d’un moteur central neuf.\nLe remplacement par une machine reconditionnée, dont l’état est estimé à 90 % de celui d’une machine neuve.\n\nNous vous invitons à confirmer votre choix directement auprès du vendeur via cette discussion afin qu’il puisse procéder à la solution retenue.\n\nNous restons à votre disposition pour toute information complémentaire.\n\nCordialement,\nL'équipe Cdiscount",
+    vendeur: "Message de CDiscount à Boutique Vactidy France le 12/11/2026 à 14:25\nBonjour,\n\nNous avons déjà contacté le client et sommes actuellement dans l’attente de son retour concernant les deux solutions proposées.\n\nDans le cas où le client refuserait ces propositions, nous vous invitons à envisager une autre solution adaptée, notamment le retour du produit, étant donné que le client nous a déjà indiqué qu’il ne dispose pas de la possibilité de le réparer.\n\nMerci de votre compréhension et de votre collaboration.\n\nCordialement,",
+    action: "J’ai informé le client que le vendeur n’avait toujours pas répondu à nos relances. Afin d’éviter une attente supplémentaire, nous procédons au remboursement du montant du produit d'un montant de 8,08 euros qui sera visible sur son compte sous 3 à 5 jours ouvrés ; le bon d'achat réactivé. Si le vendeur demande le retour du produit, j’ai indiqué au client qu’il serait dans l’obligation de le retourner."
+  },
+  {
+    raison: "VDR confirme remboursement (xx/xx) + Bon d'achat",
+    client: "-",
+    vendeur: "Bonjour,\n\nA la lecture de votre message du xx/xx, nous notons que vous souhaitez procéder au remboursement de cette commande.\n\nNous procédons donc ce jour au remboursement de la commande à vos frais et en informons le client.\n\nBonne journée",
+    action: "j'informe le client que son remboursement a été fait sous forme d'un bon d'achat qu'il peut recrédité et aussi je complète le remboursement des frais de retour"
+  },
+  {
+    raison: "Pas de réponse client - Clôture diagnostic",
+    client: "Bonjour,\n\nComme indiqué dans notre message précédent, le vendeur avait besoin d’informations afin de traiter au mieux votre demande,\n\nA ce jour, n'ayant toujours pas reçu les éléments, il est dans l'incapacité de vous proposer une prise en charge de votre produit en panne,\n\nDe notre coté, nous clôturons le dossier et vous invitons à rester en contact avec votre vendeur directement depuis ce fil de discussion.\n\nCordialement,\n\nL'équipe Cdiscount",
+    vendeur: "Bonjour,\n\nVous avez indiqué avoir besoin d'éléments complémentaires afin d'établir un diagnostic, et vous ne les avez, à ce jour pas obtenu.\n\nNous clôturons le dossier faute d’informations suffisantes. Néanmoins, une fois les informations données par le client, nous vous invitons à prendre en charge sa demande.\n\nNous vous remercions de votre réactivité .\n\nBonne journée,",
+    action: "Clôture du dossier faute d'infos client"
+  },
+  {
+    raison: "Après 30j sans solution - Remboursement 280 €",
+    client: "Bonjour,\n\nVous ne souhaitez pas patienter plus longtemps pour la réparation de votre produit. . Nous prenons bien en compte votre choix ! Nous procédons ce jour au remboursement de cette commande.\n\nMerci pour votre compréhension,\n\nL'équipe Cdiscount",
+    vendeur: "Bonjour,\n\nA ce jour, vous n'avez pas pu apporter les éléments attestant de la bonne prise en charge du SAV dans le délai impartit.\n\nLe client ne souhaitant attendre plus longtemps et le produit n'étant plus en sa possession, nous procédons ce jour au remboursement de la commande à vos frais.\n\nBonne journée",
+    action: "Le client a été informé qu’un remboursement de 280 € sera effectué sous forme de bon d’achat, qu’il pourra créditer sur son compte bancaire."
+  },
+  {
+    raison: "Refus demande - Hors défaut fabrication",
+    client: "Bonjour,\n\nLe vendeur ne peut prendre en charge votre demande car il indique que le dysfonctionnement du votre produit n'est pas dû à un défaut de fabrication.\n\nIl peut toutefois vous proposer un devis de réparation que vous serez libre d’accepter ou pas.\n\nMerci pour votre compréhension,\nL'équipe Cdiscount",
+    vendeur: "Bonjour,\n\nNous accusons réception de votre réponse et vous en remercions ; Nous notons votre refus de prise en charge de cette demande (et validons sa justification) et en informons notre client.\n\nSi cela est possible, nous vous laissons établir un devis de réparation, que le client sera libre d'accepter ou non.\n\nNous vous remercions de votre réactivité.\nBonne journée,",
+    action: "-"
+  },
+  {
+    raison: "VDR suspect ne répond pas - Remboursement",
+    client: "Bonjour,\n\nVous ne souhaitez pas patienter plus longtemps pour la réparation de votre produit. Nous prenons bien en compte votre choix ! Nous procédons ce jour au remboursement de cette commande.\n\nDes que le vendeur vous donnera une procédure de retour, il vous faudra obligatoirement renvoyer le produit.\n\nMerci pour votre compréhension,\n\nL'équipe Cdiscount",
+    vendeur: "Bonjour,\n\nA ce jour, vous n'avez pas répondu au client et ainsi n’avez pas respecté les CGMAD.\n\nLe client ne souhaitant pas attendre plus longtemps et n’ayant pas de procédure de retour à sa disposition, nous procédons ce jour au remboursement de la commande à vos frais.\n\nNous vous invitons a mettre au disposition une adresse de retour si vous souhaitez récupérer votre produit.\n\nBonne journée\n\nL'équipe Cdiscount",
+    action: "Le client a été informé qu’un remboursement de ** € sera effectué sous forme de bon d’achat, qu’il pourra créditer sur son compte bancaire. Dès que le vendeur lui communiquera la procédure de retour, le client devra obligatoirement renvoyer le produit.\n\nLe client a été informé du remboursement d’un montant de 140 €, qui sera visible sur son compte sous 3 à 5 jours ouvrés. Dès que le vendeur lui communiquera la procédure de retour, le client devra obligatoirement renvoyer le produit."
+  },
+  {
+    raison: "Étiquette fournie - Client n'a pas retourné",
+    client: "Bonjour,\n\nAfin de retourner votre produit, nous vous invitons à suivre les instructions communiquées par le vendeur.\n\nCe dernier vous a fourni une étiquette de retour. Nous vous invitons à vous rendre au point de dépôt le plus proche prenant en charge cette étiquette.\n\nPensez à conserver votre preuve de dépôt et à la télécharger directement depuis votre espace client.\n\nDès que le vendeur aura confirmé la réception du produit retourné, une solution adaptée à votre situation pourra être mise en place.\n\nNous vous remercions pour votre compréhension et votre collaboration.\n\nCordialement,\n\nL’équipe Cdiscount",
+    vendeur: "Bonjour,\n\nNous accusons réception de votre réponse et vous en remercions.\n\nVous avez confirmé au client la solution de prise en charge envisagée et disposez désormais, semble-t-il, de l'ensemble des éléments nécessaires à sa mise en œuvre.\n\nNous vous invitons donc à poursuivre les démarches engagées. Nous reprendrons contact avec vous ainsi qu'avec le client dans un délai de 10 jours afin de nous assurer du bon déroulement de la prise en charge et de l'avancement de la résolution du problème.\n\nDans l'intervalle, nous vous invitons à communiquer directement sur ce fil toute nouvelle information ou avancée concernant le dossier, notamment :\n\nLe lien de suivi en cas de réexpédition du produit ;\nLa date de prise en charge ou de rendez-vous, le cas échéant ;\nLe délai prévisionnel de résolution ;\nToute autre information utile au suivi de la demande.\n\nNous vous remercions pour votre réactivité et comptons sur votre engagement afin de garantir une résolution dans les meilleurs délais.\n\nBonne journée,\n\nL'équipe Cdiscount",
+    action: "J’ai informé la cliente que le vendeur avait déjà fourni une étiquette de retour afin de renvoyer le produit. Je l’ai invitée à suivre les étapes indiquées, à retourner le produit au vendeur et à fournir une preuve de dépôt afin d’assurer le suivi du retour. Une fois le retour confirmé par le vendeur, une solution sera proposée."
+  },
+  {
+    raison: "Client ne répond pas - Enlèvement / Clôture",
+    client: "Bonjour,\n\nComme indiqué dans notre message précédent, le vendeur avait besoin d’informations afin de traiter au mieux votre demande, A ce jour, n'ayant toujours pas reçu les éléments, il est dans l'incapacité de vous proposer une prise en charge de votre produit en panne,\n\nDe notre coté, nous clôturons le dossier et vous invitons à rester en contact avec votre vendeur directement depuis ce fil de discussion ,\n\nL'équipe Cdiscount",
+    vendeur: "Bonjour,\n\nVous avez indiqué avoir besoin d'éléments complémentaires afin d'établir un diagnostic, et vous ne les avez, à ce jour pas obtenu.\n\nNous clôturons le dossier faute d’informations suffisantes. Néanmoins, une fois les informations données par le client, nous vous invitons à prendre en charge sa demande.\n\nNous vous remercions de votre réactivité .\n\nBonne journée,",
+    action: "J ai informé la cliente que le vendeur était toujours en attente des informations nécessaires pour organiser l enlèvement du colis à domicile. Je l ai invitée à répondre au vendeur via la discussion en cours afin de fournir les informations demandées et d accélérer le traitement de sa demande.\n\nClôture du dossier faute d'infos client"
+  },
+  {
+    raison: "Demande rapport d'expertise (48h)",
+    client: "-",
+    vendeur: "Cher vendeur,\n\n\nMerci de transmettre un rapport d'expertise conforme, indiquant que la panne du produit est liée à la casse.\nA défaut, nous vous demandons de procéder aux réparations de l'article sous 48h.\nSans retour de votre art sous 48h, nous procéderons au remboursement de cette commande à votre charge.\n\n\nCordialement,\n\n\nLe Service Client Cdiscount",
+    action: "-"
+  },
+  {
+    raison: "Client ne répond pas (Terra - 16/11/2026)",
+    client: "Bonjour,\n\nComme indiqué dans notre message précédent, le vendeur avait besoin d’informations afin de traiter au mieux votre demande, A ce jour, n'ayant toujours pas reçu les éléments, il est dans l'incapacité de vous proposer une prise en charge de votre produit en panne, De notre coté, nous clôturons le dossier et vous invitons à rester en contact avec votre vendeur directement depuis ce fil de discussion ,\n\nL'équipe Cdiscount",
+    vendeur: "Message de CDiscount à Terra le 16/11/2026 à 13:17\nBonjour,\n\nVous avez indiqué avoir besoin d'éléments complémentaires afin d'établir un diagnostic, et vous ne les avez, à ce jour pas obtenu.\n\nNous clôturons le dossier faute d’informations suffisantes. Néanmoins, une fois les informations données par le client, nous vous invitons à prendre en charge sa demande.\n\nNous vous remercions de votre réactivité .\n\nBonne journée,",
+    action: "-"
+  },
+  {
+    raison: "Adresse retour + Avance frais 7,59 € (ME 10j)",
+    client: "Bonjour\n\nNous constatons que le vendeur vous a fourni une procédure de retour conforme\n\nJe vous invite à appliquer la procédure de retour qui vous a été fourni afin de retourner votre produit\n\nJe viens donc de créditer votre compte bancaire d'un montant de 7,59 € pour avancer les frais de retour.\n\nAprès le retour du produit, merci de transmettre la preuve de dépôt ainsi que la facture afin de finaliser le remboursement des frais de retour. Veuillez également maintenir le contact avec le vendeur via le même fil de discussion.\n\nDès réception de celui-ci du produit dans son entrepôt, le vendeur prendra en charge\n\nEn cas de besoin, n'hésitez pas à demander notre intervention\n\nMerci pour votre compréhension\n\nCordialement,\n\nL'équipe Cdiscount",
+    vendeur: "Bonjour,\n\nNous accusons réception de votre réponse et vous en remercions.\n\nVous avez confirmé au client la solution de prise en charge envisagée et disposez désormais, semble-t-il, de l'ensemble des éléments nécessaires à sa mise en œuvre.\n\nNous avançons les frais de retour au client, et nous vous invitons donc à poursuivre les démarches engagées. Nous reprendrons contact avec vous ainsi qu'avec le client dans un délai de 10 jours afin de nous assurer du bon déroulement de la prise en charge et de l'avancement de la résolution du problème.\n\nDans l'intervalle, nous vous invitons à communiquer directement sur ce fil toute nouvelle information ou avancée concernant le dossier, notamment :\n\nLe lien de suivi en cas de réexpédition du produit ;\nLa date de prise en charge ou de rendez-vous, le cas échéant ;\nLe délai prévisionnel de résolution ;\nToute autre information utile au suivi de la demande.\n\nNous vous remercions pour votre réactivité et comptons sur votre engagement afin de garantir une résolution dans les meilleurs délais.\n\nBonne journée,\n\nL'équipe Cdiscount",
+    action: "appell : J’ai informé la cliente que le vendeur avait bien communiqué son adresse de retour. Je l’ai invitée à retourner le produit et à nous transmettre le numéro de suivi.\n\nJe lui ai également précisé que les frais de retour seraient remboursés à hauteur de 7,59 euros. Si le montant payé est supérieur, elle devra nous transmettre la preuve de dépôt ainsi que la facture afin que nous puissions compléter le remboursement.\n\nEnfin, je l’ai informée que le vendeur avait été relancé afin de procéder au traitement du produit dès sa réception."
+  },
+  {
+    raison: "Pas de solution conforme (48h ouvrées)",
+    client: "Bonjour,\n\nNous relançons ce jour le vendeur  afin qu’il vous fournisse une solution pour réparer votre produit. Nous vous invitons à rester en contact avec votre vendeur directement depuis cette discussion.\n\nNous reviendrons vers vous  dans 48 h ouvres afin de valider la bonne prise en charge de votre demande.\n\nMerci pour votre compréhension,\n\nL'équipe Cdiscount",
+    vendeur: "Message de CDiscount à FR Outdoor Sports Club Store le 21/11/2026 à 10:33\nBonjour,\n\nLe client nous a signalé une panne concernant son produit, mais n’a malheureusement reçu aucune réponse conforme de votre part à ce jour.\n\nNous vous rappelons que vous êtes tenu de répondre à toute demande de prise en charge dans un délai de 48 heures.\n\nSans réponse de votre part sous 2j , vous vous exposez à un éventuel remboursement de la commande à vos frais.\n\nNous vous remercions de bien vouloir faire le nécessaire dans les meilleurs délais et de nous confirmer la prise en charge de la demande du client.\n\nNous comptons sur votre réactivité.\n\nBonne journée.",
+    action: "Attente solution conforme"
+  }
+];
+
+const container = document.getElementById('liste-boutons');
+const searchInput = document.getElementById('searchInput');
+let activeIndex = 0;
+
+function renderButtons(filterText = '') {
+  container.innerHTML = '';
+  const query = filterText.trim().toLowerCase();
+
+  const matches = modeles
+    .map((m, i) => ({ m, i }))
+    .filter(({ m }) => {
+      if (!query) return true;
+      return (
+        m.raison.toLowerCase().includes(query) ||
+        m.client.toLowerCase().includes(query) ||
+        m.vendeur.toLowerCase().includes(query) ||
+        m.action.toLowerCase().includes(query)
+      );
+    });
+
+  matches.forEach(({ m, i }) => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (i === activeIndex ? ' active' : '');
+    btn.textContent = m.raison;
+    btn.onclick = () => {
+      activeIndex = i;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      afficher(i);
+    };
+    container.appendChild(btn);
+  });
+
+  if (matches.length > 0 && !matches.some(item => item.i === activeIndex)) {
+    activeIndex = matches[0].i;
+    afficher(activeIndex);
+    if (container.firstChild) container.firstChild.classList.add('active');
+  }
+}
+
+function afficher(index) {
+  const m = modeles[index];
+  if (!m) return;
+  document.getElementById('client').textContent = m.client?.trim() || '(vide)';
+  document.getElementById('vendeur').textContent = m.vendeur?.trim() || '(vide)';
+  document.getElementById('action').textContent = m.action?.trim() || '(vide)';
+}
+
+function copier(id, btnEl) {
+  const txt = document.getElementById(id).textContent.trim();
+  if (!txt || txt === '(vide)' || txt === '-') {
+    toast('Aucun contenu à copier', 'icon-alert-triangle');
+    return;
+  }
+  navigator.clipboard.writeText(txt).then(() => {
+    toast('Copié dans le presse-papiers', 'icon-check');
+    if (btnEl) {
+      const label = btnEl.querySelector('span');
+      const oldText = label ? label.textContent : 'Copier';
+      btnEl.classList.remove('btn-primary');
+      btnEl.classList.add('btn-success');
+      if (label) label.textContent = 'Copié !';
+      setTimeout(() => {
+        btnEl.classList.remove('btn-success');
+        btnEl.classList.add('btn-primary');
+        if (label) label.textContent = oldText;
+      }, 1400);
+    }
+  }).catch(() => {
+    toast('Échec de la copie', 'icon-alert-triangle');
+  });
+}
+
+searchInput.addEventListener('input', (e) => {
+  renderButtons(e.target.value);
+});
+
+renderButtons();
+afficher(0);
+
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('sideQuickBtn');
+  const panel = document.getElementById('sideQuickPanel');
+  const overlay = document.getElementById('sideOverlay');
+
+  function closePanel() {
+    panel.classList.remove('open');
+    overlay.classList.remove('open');
+  }
+
+  btn.addEventListener('click', () => {
+    panel.classList.toggle('open');
+    overlay.classList.toggle('open');
+  });
+
+  overlay.addEventListener('click', closePanel);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closePanel();
+  });
+});
+</script>
+</body>
+</html>
